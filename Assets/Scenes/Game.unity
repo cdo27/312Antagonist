@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 1294637893}
   - component: {fileID: 1294637895}
   - component: {fileID: 1294637894}
+  - component: {fileID: 1294637896}
   m_Layer: 0
   m_Name: Ant
   m_TagString: Untagged
@@ -292,7 +293,7 @@ Transform:
   m_GameObject: {fileID: 1294637892}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 34.1, y: 28.2, z: -0.1}
+  m_LocalPosition: {x: 34.1, y: 28.2, z: 0}
   m_LocalScale: {x: 0.3561, y: 0.3561, z: 0.3561}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -395,6 +396,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1294637896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294637892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64143d056450d484583e344e58f0251c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveButton: {fileID: 2123179422}
 --- !u!1 &1563362757
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +490,7 @@ GameObject:
   - component: {fileID: 1615675088}
   m_Layer: 0
   m_Name: Game
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -522,7 +536,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 167
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -549,7 +563,7 @@ Transform:
   m_GameObject: {fileID: 1615675087}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -374.3, y: -281.2, z: -147.6}
+  m_LocalPosition: {x: -374.3, y: -281.2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1545,7 +1559,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2123179420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 20.5}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1554,7 +1568,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -608.2, y: -362.8}
+  m_AnchoredPosition: {x: -609, y: -413}
   m_SizeDelta: {x: 120, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2123179422
