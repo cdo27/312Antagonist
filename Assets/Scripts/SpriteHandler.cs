@@ -3,58 +3,90 @@ using UnityEngine.UI;
 
 public class SpriteHandler : MonoBehaviour
 {
-    public Button moveButton; 
-    private bool isSpriteClicked = false; 
+    public Button moveButton; // The button to show/hide
+    public float buttonScale = 0.5f; // Scale factor for the button
+    private bool isSpriteClicked = false; // Flag to check if sprite is clicked
+    private bool isButtonVisible = false; // Additional flag to manage button visibility
+
     void Start()
     {
-        //button is hidden at start
+        // Initially hide the move button
         if (moveButton != null)
         {
             moveButton.gameObject.SetActive(false);
+            // Scale the button
+            moveButton.transform.localScale = new Vector3(buttonScale, buttonScale, buttonScale);
+            // Add click listener to the button
+            moveButton.onClick.AddListener(OnMoveButtonClick);
         }
     }
 
-    //when box collider clicked
     void OnMouseDown()
     {
-        Debug.Log("Sprite clicked!"); //when sprite is clicked
+        // Log and handle the sprite click
+        Debug.Log("Sprite clicked!");
+        isSpriteClicked = true;
 
+        // Toggle button visibility based on current state
         if (moveButton != null)
         {
-            //show button
-            moveButton.gameObject.SetActive(true);
-            isSpriteClicked = true;
+            if (!isButtonVisible)
+            {
+                PositionButtonNearSprite();
+                moveButton.gameObject.SetActive(true);
+                isButtonVisible = true;
+            }
+            else
+            {
+                moveButton.gameObject.SetActive(false);
+                isButtonVisible = false;
+            }
         }
     }
 
     void Update()
     {
-        //hide button when clicked off
-        if (Input.GetMouseButtonDown(0))
+        // Check for mouse click events to reset the sprite click flag
+        if (Input.GetMouseButtonDown(0) && !isSpriteClicked)
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPos.z = 0;
+            Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
 
-            //only if sprite isnt clicked 
-            if (!isSpriteClicked)
+            // Hide button if clicked outside the sprite
+            if (hitCollider == null || hitCollider.gameObject != gameObject)
             {
-                Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
-                if (hitCollider == null || hitCollider.gameObject != gameObject)
+                Debug.Log("Clicked outside the sprite.");
+                if (moveButton != null && isButtonVisible)
                 {
-                    Debug.Log("Clicked outside the sprite."); //when clicked off
-
-                    if (moveButton != null)
-                    {
-                        //hide button
-                        moveButton.gameObject.SetActive(false);
-                    }
+                    moveButton.gameObject.SetActive(false);
+                    isButtonVisible = false;
                 }
             }
-            else
-            {
-                //reset flag
-                isSpriteClicked = false;
-            }
         }
+
+        // Reset the sprite click flag at the end of the frame
+        if (!Input.GetMouseButtonDown(0))
+        {
+            isSpriteClicked = false;
+        }
+    }
+
+    private void PositionButtonNearSprite()
+    {
+        // Calculate the position
+        Vector3 spritePosition = transform.position;
+        Vector3 buttonPosition = spritePosition + new Vector3(1, 0, 0); // Adjust X offset as needed
+
+        // Convert world position to screen position for UI element
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(buttonPosition);
+        moveButton.transform.position = screenPos;
+    }
+
+    private void OnMoveButtonClick()
+    {
+        // Hide the button when clicked
+        Debug.Log("Move button clicked!");
+        moveButton.gameObject.SetActive(false);
+        isButtonVisible = false;
     }
 }
