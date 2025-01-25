@@ -409,6 +409,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveButton: {fileID: 2123179422}
+  buttonScale: 0.5
+  movementTilemap: {fileID: 2037312802}
+  highlightTile: {fileID: 0}
+  characterTransform: {fileID: 1294637893}
 --- !u!1 &1563362757
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +686,7 @@ GameObject:
   - component: {fileID: 2037312800}
   - component: {fileID: 2037312802}
   - component: {fileID: 2037312801}
+  - component: {fileID: 2037312803}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -1455,6 +1460,23 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &2037312803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037312799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64143d056450d484583e344e58f0251c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveButton: {fileID: 2123179422}
+  buttonScale: 0.5
+  movementTilemap: {fileID: 2037312802}
+  highlightTile: {fileID: 0}
+  characterTransform: {fileID: 1294637893}
 --- !u!1 &2084522401
 GameObject:
   m_ObjectHideFlags: 0

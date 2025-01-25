@@ -6,8 +6,8 @@ MonoImporter:
   defaultReferences:
   - moveButton: {instanceID: 0}
   - movementTilemap: {instanceID: 0}
-  - highlightTile: {fileID: 11400000, guid: 3c2b101a3751cdb488329488dc4c2f52, type: 2}
-  - antGameObject: {instanceID: 0}
+  - highlightTile: {instanceID: 0}
+  - characterTransform: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
