@@ -6,16 +6,17 @@ public class SpriteHandler : MonoBehaviour
     public Button moveButton; // The button to show/hide
     public float buttonScale = 0.5f; // Scale factor for the button
     private bool isSpriteClicked = false; // Flag to check if sprite is clicked
-    private bool isButtonVisible = false; // Additional flag to manage button visibility
+    private bool buttonDisplayed = false; // State of the button display
 
     void Start()
     {
-        // Initially hide the move button
+        // Initially hide the move button and scale it
         if (moveButton != null)
         {
             moveButton.gameObject.SetActive(false);
-            // Scale the button
             moveButton.transform.localScale = new Vector3(buttonScale, buttonScale, buttonScale);
+            // Optionally adjust the button's collider here if necessary
+            UpdateButtonCollider();
             // Add click listener to the button
             moveButton.onClick.AddListener(OnMoveButtonClick);
         }
@@ -23,61 +24,47 @@ public class SpriteHandler : MonoBehaviour
 
     void OnMouseDown()
     {
-        // Log and handle the sprite click
-        Debug.Log("Sprite clicked!");
+        // Toggle sprite click state and button display
         isSpriteClicked = true;
-
-        // Toggle button visibility based on current state
-        if (moveButton != null)
-        {
-            if (!isButtonVisible)
-            {
-                PositionButtonNearSprite();
-                moveButton.gameObject.SetActive(true);
-                isButtonVisible = true;
-            }
-            else
-            {
-                moveButton.gameObject.SetActive(false);
-                isButtonVisible = false;
-            }
-        }
     }
 
     void Update()
     {
-        // Check for mouse click events to reset the sprite click flag
-        if (Input.GetMouseButtonDown(0) && !isSpriteClicked)
+        if (isSpriteClicked)
         {
+            // Handle sprite being clicked
+            if (!buttonDisplayed)
+            {
+                Debug.Log("Sprite clicked!");
+                PositionButtonNearSprite();
+                moveButton.gameObject.SetActive(true);
+                buttonDisplayed = true;
+            }
+            isSpriteClicked = false;
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            // Check for clicks outside the sprite to hide the button
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
 
-            // Hide button if clicked outside the sprite
-            if (hitCollider == null || hitCollider.gameObject != gameObject)
+            if (hitCollider == null || hitCollider.gameObject != this.gameObject)
             {
                 Debug.Log("Clicked outside the sprite.");
-                if (moveButton != null && isButtonVisible)
+                if (buttonDisplayed)
                 {
                     moveButton.gameObject.SetActive(false);
-                    isButtonVisible = false;
+                    buttonDisplayed = false;
                 }
             }
-        }
-
-        // Reset the sprite click flag at the end of the frame
-        if (!Input.GetMouseButtonDown(0))
-        {
-            isSpriteClicked = false;
         }
     }
 
     private void PositionButtonNearSprite()
     {
-        // Calculate the position
+        // Calculate position to the right of the sprite
         Vector3 spritePosition = transform.position;
-        Vector3 buttonPosition = spritePosition + new Vector3(1, 0, 0); // Adjust X offset as needed
-
-        // Convert world position to screen position for UI element
+        Vector3 buttonPosition = spritePosition + new Vector3(1, 0, 0);
         Vector3 screenPos = Camera.main.WorldToScreenPoint(buttonPosition);
         moveButton.transform.position = screenPos;
     }
@@ -87,6 +74,20 @@ public class SpriteHandler : MonoBehaviour
         // Hide the button when clicked
         Debug.Log("Move button clicked!");
         moveButton.gameObject.SetActive(false);
-        isButtonVisible = false;
+        buttonDisplayed = false;
+    }
+
+    private void UpdateButtonCollider()
+    {
+        // Adjust the button collider to match the button's visual scale
+        RectTransform rectTransform = moveButton.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            BoxCollider2D collider = moveButton.GetComponent<BoxCollider2D>();
+            if (collider != null)
+            {
+                collider.size = rectTransform.rect.size * buttonScale;  // Scale collider size
+            }
+        }
     }
 }
