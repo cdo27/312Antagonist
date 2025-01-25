@@ -3,7 +3,11 @@ guid: 64143d056450d484583e344e58f0251c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - moveButton: {instanceID: 0}
+  - movementTilemap: {instanceID: 0}
+  - highlightTile: {fileID: 11400000, guid: 3c2b101a3751cdb488329488dc4c2f52, type: 2}
+  - antGameObject: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
