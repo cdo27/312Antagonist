@@ -57,17 +57,17 @@ public class SpriteHandler : MonoBehaviour
             {
                 // Clicked on a highlighted tile
             }
-            else
-            {
-                // Clicked outside a highlighted tile or outside the sprite
-                Debug.Log("Clicked outside the sprite or on non-highlighted tiles.");
-                ClearHighlightedTiles();
-                if (buttonDisplayed)
-                {
-                    moveButton.gameObject.SetActive(false);
-                    buttonDisplayed = false;
-                }
-            }
+            // else
+            // {
+            //     // Clicked outside a highlighted tile or outside the sprite
+            //     Debug.Log("Clicked outside the sprite or on non-highlighted tiles.");
+            //     ClearHighlightedTiles();
+            //     if (buttonDisplayed)
+            //     {
+            //         moveButton.gameObject.SetActive(false);
+            //         buttonDisplayed = false;
+            //     }
+            // }
         }
     }
 
@@ -105,7 +105,7 @@ public class SpriteHandler : MonoBehaviour
     {
         // Get the character's position in the Tilemap
         Vector3Int basePosition = movementTilemap.WorldToCell(characterTransform.position);
-
+        Debug.Log(basePosition);
         // Highlight tiles within a 2-grid radius, excluding the character's current tile
         for (int x = -2; x <= 2; x++)
         {
