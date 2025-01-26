@@ -277,6 +277,7 @@ GameObject:
   - component: {fileID: 1294637895}
   - component: {fileID: 1294637894}
   - component: {fileID: 1294637896}
+  - component: {fileID: 1294637897}
   m_Layer: 0
   m_Name: Ant
   m_TagString: Untagged
@@ -408,10 +409,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64143d056450d484583e344e58f0251c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveButton: {fileID: 2123179422}
   movementTilemap: {fileID: 1800434918}
   highlightTile: {fileID: 11400000, guid: 9a553a6aeea7cdc43aac444bb619b53a, type: 2}
   characterTransform: {fileID: 1294637893}
+--- !u!114 &1294637897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294637892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0610d5d93a6bf488c2114d9c5adc4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveButton: {fileID: 2123179422}
+  spriteHandler: {fileID: 1294637896}
   buttonScale: 0.5
 --- !u!1 &1563362757
 GameObject:
@@ -1480,11 +1494,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64143d056450d484583e344e58f0251c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveButton: {fileID: 2123179422}
   movementTilemap: {fileID: 1800434918}
   highlightTile: {fileID: 11400000, guid: 9a553a6aeea7cdc43aac444bb619b53a, type: 2}
   characterTransform: {fileID: 1294637893}
-  buttonScale: 0.5
 --- !u!1 &2037312799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,6 +1509,7 @@ GameObject:
   - component: {fileID: 2037312802}
   - component: {fileID: 2037312801}
   - component: {fileID: 2037312803}
+  - component: {fileID: 2037312804}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -2282,10 +2295,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64143d056450d484583e344e58f0251c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveButton: {fileID: 2123179422}
   movementTilemap: {fileID: 2037312802}
   highlightTile: {fileID: 11400000, guid: 407b9dab8a51ce242827d1241653d6de, type: 2}
   characterTransform: {fileID: 1294637893}
+--- !u!114 &2037312804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037312799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0610d5d93a6bf488c2114d9c5adc4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveButton: {fileID: 2123179422}
+  spriteHandler: {fileID: 1294637896}
   buttonScale: 0.5
 --- !u!1 &2084522401
 GameObject:
