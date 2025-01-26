@@ -409,10 +409,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveButton: {fileID: 2123179422}
-  buttonScale: 0.5
   movementTilemap: {fileID: 2037312802}
-  highlightTile: {fileID: 0}
+  highlightTile: {fileID: 11400000, guid: 407b9dab8a51ce242827d1241653d6de, type: 2}
   characterTransform: {fileID: 1294637893}
+  buttonScale: 0.5
 --- !u!1 &1563362757
 GameObject:
   m_ObjectHideFlags: 0
@@ -1473,10 +1473,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveButton: {fileID: 2123179422}
-  buttonScale: 0.5
   movementTilemap: {fileID: 2037312802}
-  highlightTile: {fileID: 0}
+  highlightTile: {fileID: 11400000, guid: 407b9dab8a51ce242827d1241653d6de, type: 2}
   characterTransform: {fileID: 1294637893}
+  buttonScale: 0.5
 --- !u!1 &2084522401
 GameObject:
   m_ObjectHideFlags: 0
