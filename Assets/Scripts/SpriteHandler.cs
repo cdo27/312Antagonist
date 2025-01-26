@@ -23,7 +23,7 @@ public class SpriteHandler : MonoBehaviour
             {
                 Vector3Int tilePosition = new Vector3Int(basePosition.x + x, basePosition.y + y, basePosition.z);
                 int distance = Mathf.Abs(x) + Mathf.Abs(y);
-                if (distance > 0 && distance <= 2 && !movementTilemap.HasTile(tilePosition))
+                if (distance > 0 && distance <= 2)
                 {
                     movementTilemap.SetTile(tilePosition, highlightTile);
                 }
