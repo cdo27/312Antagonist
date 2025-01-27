@@ -22,38 +22,44 @@ public class ButtonHandler : MonoBehaviour
 
     void Update()
     {
-        // Check if the mouse button is pressed down
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
+            Vector3Int clickedTilePosition = spriteHandler.movementTilemap.WorldToCell(mouseWorldPos);
 
-            // Check if the clicked object is the character
-            if (hitCollider != null && hitCollider.transform == spriteHandler.characterTransform)
+            // Check if clicked on highlighted tile
+            if (spriteHandler.movementTilemap.HasTile(clickedTilePosition) && spriteHandler.movementTilemap.GetTile(clickedTilePosition) == spriteHandler.highlightTile)
             {
-                Debug.Log("Character clicked!");
-                if (!buttonDisplayed && !tilesHighlighted)
+                Debug.Log("Clicked on a highlighted tile.");
+                spriteHandler.MoveCharacter(clickedTilePosition);
+                tilesHighlighted = false; // Reset highlighted state after movement
+                moveButton.gameObject.SetActive(false);
+                buttonDisplayed = false;
+            }
+            else if (!tilesHighlighted)
+            {
+                Collider2D hitCollider = Physics2D.OverlapPoint(mouseWorldPos);
+
+                // Check if the clicked object is the character
+                if (hitCollider != null && hitCollider.transform == spriteHandler.characterTransform)
                 {
-                    DisplayButton();
+                    Debug.Log("Character clicked!");
+                    if (!buttonDisplayed)
+                    {
+                        DisplayButton();
+                    }
                 }
             }
             else
             {
-                // If clicked outside the character or highlighted tiles
-                Vector3Int clickedTilePosition = spriteHandler.movementTilemap.WorldToCell(mouseWorldPos);
+                Debug.Log("Clicked outside the highlighted tiles.");
+                spriteHandler.ClearHighlightedTiles();
+                tilesHighlighted = false;
 
-                if (!spriteHandler.movementTilemap.HasTile(clickedTilePosition) || spriteHandler.movementTilemap.GetTile(clickedTilePosition) != spriteHandler.highlightTile)
+                if (buttonDisplayed)
                 {
-                    Debug.Log("Clicked outside the highlighted tiles.");
-                    spriteHandler.ClearHighlightedTiles();
-                    tilesHighlighted = false;
-
-                    // Hide the button if it is displayed
-                    if (buttonDisplayed)
-                    {
-                        moveButton.gameObject.SetActive(false);
-                        buttonDisplayed = false;
-                    }
+                    moveButton.gameObject.SetActive(false);
+                    buttonDisplayed = false;
                 }
             }
         }
@@ -81,11 +87,6 @@ public class ButtonHandler : MonoBehaviour
             spriteHandler.HighlightMovementTiles();
             tilesHighlighted = true;
         }
-        else
-        {
-            spriteHandler.ClearHighlightedTiles();
-            tilesHighlighted = false;
-        }
 
         moveButton.gameObject.SetActive(false);
         buttonDisplayed = false;
@@ -104,3 +105,4 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 }
+
