@@ -6,8 +6,11 @@ public class SpriteHandler : MonoBehaviour
     public Tilemap movementTilemap; // Reference to the Tilemap (Ground)
     public Tile highlightTile; // Tile to use for highlighting moves
     public Transform characterTransform; // Reference to the character (Ant)
+    public TurnManager turnManager;
+
     private bool isMoving = false; // Whether the character is currently moving
     private Vector3 targetPosition; // Target position for movement
+    public bool hasMoved = false;
 
     void Start()
     {
@@ -17,8 +20,14 @@ public class SpriteHandler : MonoBehaviour
 
     public void HighlightMovementTiles()
     {
+        // Only highlight tiles if the ant hasn't moved this turn
+        if (turnManager != null && (!turnManager.isPlayerTurn || hasMoved)){
+            Debug.Log("Player has already moved this turn.");
+            return;
+        } 
+
         Vector3Int basePosition = movementTilemap.WorldToCell(characterTransform.position);
-        Debug.Log("Highlighting tiles at position: " + basePosition);
+        //Debug.Log("Highlighting tiles at position: " + basePosition);
 
         // Highlight only adjacent tiles (up, down, left, right)
         Vector3Int[] directions = {
@@ -41,7 +50,7 @@ public class SpriteHandler : MonoBehaviour
     public void ClearHighlightedTiles()
     {
         Vector3Int basePosition = movementTilemap.WorldToCell(characterTransform.position);
-        Debug.Log("Clearing highlighted tiles around: " + basePosition);
+        //Debug.Log("Clearing highlighted tiles around: " + basePosition);
 
         // Clear only the highlighted tiles in valid directions
         Vector3Int[] directions = {
@@ -71,7 +80,7 @@ public class SpriteHandler : MonoBehaviour
 
         if ((Mathf.Abs(difference.x) + Mathf.Abs(difference.y)) != 1)
         {
-            Debug.Log("Invalid move. Can only move one tile at a time in cardinal directions.");
+            //Debug.Log("Invalid move. Can only move one tile at a time in cardinal directions.");
             return;
         }
 
@@ -97,5 +106,12 @@ public class SpriteHandler : MonoBehaviour
         // Snap to the exact position to prevent floating-point errors
         characterTransform.position = targetPosition;
         isMoving = false;
+        hasMoved = true;
+    }
+
+    public void ResetTurn()
+    {
+        // Called by TurnManager to reset the movement for the new turn
+        hasMoved = false;
     }
 }

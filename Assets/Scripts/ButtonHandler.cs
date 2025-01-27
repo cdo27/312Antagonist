@@ -9,6 +9,8 @@ public class ButtonHandler : MonoBehaviour
     private bool buttonDisplayed = false; // State of the button display
     private bool tilesHighlighted = false; // State of the highlighted tiles
 
+    public TurnManager turnManager; // To track if player can move and button show up
+
     void Start()
     {
         if (moveButton != null)
@@ -22,6 +24,23 @@ public class ButtonHandler : MonoBehaviour
 
     void Update()
     {
+        // Only interactions during the player's turn
+        if (turnManager != null && !turnManager.isPlayerTurn)
+        {
+            // Clear button and highlights if it's not the player's turn
+            if (buttonDisplayed)
+            {
+                moveButton.gameObject.SetActive(false);
+                buttonDisplayed = false;
+            }
+            if (tilesHighlighted)
+            {
+                spriteHandler.ClearHighlightedTiles();
+                tilesHighlighted = false;
+            }
+            return; // Exit if it's not the player's turn
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -30,11 +49,12 @@ public class ButtonHandler : MonoBehaviour
             // Check if clicked on highlighted tile
             if (spriteHandler.movementTilemap.HasTile(clickedTilePosition) && spriteHandler.movementTilemap.GetTile(clickedTilePosition) == spriteHandler.highlightTile)
             {
-                Debug.Log("Clicked on a highlighted tile.");
+                //Debug.Log("Clicked on a highlighted tile.");
                 spriteHandler.MoveCharacter(clickedTilePosition);
                 tilesHighlighted = false; // Reset highlighted state after movement
                 moveButton.gameObject.SetActive(false);
                 buttonDisplayed = false;
+
             }
             else if (!tilesHighlighted)
             {
@@ -43,7 +63,7 @@ public class ButtonHandler : MonoBehaviour
                 // Check if the clicked object is the character
                 if (hitCollider != null && hitCollider.transform == spriteHandler.characterTransform)
                 {
-                    Debug.Log("Character clicked!");
+                    //Debug.Log("Character clicked!");
                     if (!buttonDisplayed)
                     {
                         DisplayButton();
@@ -52,7 +72,7 @@ public class ButtonHandler : MonoBehaviour
             }
             else
             {
-                Debug.Log("Clicked outside the highlighted tiles.");
+                //Debug.Log("Clicked outside the highlighted tiles.");
                 spriteHandler.ClearHighlightedTiles();
                 tilesHighlighted = false;
 
@@ -67,7 +87,7 @@ public class ButtonHandler : MonoBehaviour
 
     private void DisplayButton()
     {
-        Debug.Log("Displaying move button.");
+        //Debug.Log("Displaying move button.");
         Vector3 characterPosition = spriteHandler.characterTransform.position;
         Vector3 buttonPositionOffset = new Vector3(0, 0.35f, 0); // Position the button above the character
         Vector3 buttonPosition = Camera.main.WorldToScreenPoint(characterPosition + buttonPositionOffset);
@@ -79,7 +99,7 @@ public class ButtonHandler : MonoBehaviour
 
     private void OnMoveButtonClick()
     {
-        Debug.Log("Move button clicked!");
+        //Debug.Log("Move button clicked!");
 
         // Highlight movement tiles and hide the button
         if (!tilesHighlighted)

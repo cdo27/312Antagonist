@@ -8,6 +8,7 @@ public class QueenAntManager : MonoBehaviour
     public Vector2Int exitPosition;  // Exit position on the grid
     public Tilemap tilemap; 
     public float moveSpeed = 2.0f;
+    public bool hasFinishedMoving = true; // Track if the Queen Ant is done moving
 
     private bool hasWon = false;     // if the win condition has been met
 
@@ -52,6 +53,7 @@ public class QueenAntManager : MonoBehaviour
 
         // Update the Queen's grid position
         queenPosition += direction;
+        hasFinishedMoving = false; // Mark the Queen as moving
 
         // Convert the grid position to a world position on the Tilemap
         Vector3 targetPosition = tilemap.GetCellCenterWorld((Vector3Int)queenPosition);
@@ -68,6 +70,7 @@ public class QueenAntManager : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             yield return null;
         }
+        hasFinishedMoving = true;
 
         // Snap to the final position
         transform.position = targetPosition;
