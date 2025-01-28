@@ -6,6 +6,8 @@ public class GridManager : MonoBehaviour
     public int gridSizeX = 8; // Number of tiles in the X direction
     public int gridSizeY = 8; // Number of tiles in the Y direction
 
+    // ref to gamestates
+    public PlayerAnt playerAnt;
     public GameManager gameManager;
 
     void Start()
@@ -43,6 +45,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+
 
         // log the grid after population
         Debug.Log("Grid Population Complete!");
