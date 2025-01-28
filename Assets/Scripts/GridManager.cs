@@ -6,6 +6,8 @@ public class GridManager : MonoBehaviour
     public int gridSizeX = 8; // Number of tiles in the X direction
     public int gridSizeY = 8; // Number of tiles in the Y direction
 
+    public GameManager gameManager;
+
     void Start()
     {
         gridArray = new BaseTile[gridSizeX, gridSizeY];
@@ -48,26 +50,28 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        // Detect mouse click on the grid
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Create a ray from the mouse position
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            // Perform the raycast to check for hits
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            // If the raycast hits something
-            if (hit.collider != null)
+        // if player's turn, detect mosue clicks
+        if(gameManager.gameState == GameManager.GameState.Player || gameManager.gameState == GameManager.GameState.Deploy){
+            if (Input.GetMouseButtonDown(0))
             {
-                // Get the BaseTile component from the hit object
-                BaseTile baseTile = hit.collider.GetComponent<BaseTile>();
+                // Create a ray from the mouse position
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                // If a BaseTile was hit
-                if (baseTile != null)
+                // Perform the raycast to check for hits
+                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+                // If the raycast hits something
+                if (hit.collider != null)
                 {
-                    // Print the tile's index from the grid
-                     Debug.Log($"Tile clicked at ({baseTile.xIndex}, {baseTile.yIndex}) with type: {baseTile.tileType}");
+                    // Get the BaseTile component from the hit object
+                    BaseTile baseTile = hit.collider.GetComponent<BaseTile>();
+
+                    // If a BaseTile was hit
+                    if (baseTile != null)
+                    {
+                        // Print the tile's index from the grid
+                        Debug.Log($"Tile clicked at ({baseTile.xIndex}, {baseTile.yIndex}) with type: {baseTile.tileType}");
+                    }
                 }
             }
         }
