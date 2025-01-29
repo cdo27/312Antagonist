@@ -7,8 +7,9 @@ public class GridManager : MonoBehaviour
     public int gridSizeY = 8; // Number of tiles in the Y direction
 
     // ref to gamestates
-    public PlayerAnt playerAnt;
+    public ScoutAnt scoutAnt;
     public GameManager gameManager;
+    public UIManager uiManager;
 
     void Start()
     {
@@ -74,9 +75,28 @@ public class GridManager : MonoBehaviour
                     {
                         // Print the tile's index from the grid
                         Debug.Log($"Tile clicked at ({baseTile.xIndex}, {baseTile.yIndex}) with type: {baseTile.tileType}");
+                       
+                        //Check clicked tile for ants, show UI, highlight tiles
+                        // Check if the clicked tile contains the ScoutAnt
+                        if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            uiManager.ShowScoutAntUI();
+                            HighlightSurroundingTiles(scoutAnt.gridPosition);
+                            Debug.Log("Scout Ant is on this tile!");
+                            // You can add any additional logic here, like displaying a button or performing an action
+                        }
+                        
                     }
                 }
             }
+            if (Input.GetMouseButtonDown(1)) //Right click to deselect everything?
+            {
+                uiManager.HideScoutAntUI();
+                UnhighlightSurroundingTiles(scoutAnt.gridPosition);
+                Debug.Log("Right-click detected!");
+            }
+
+            
         }
     }
 
@@ -98,5 +118,50 @@ public class GridManager : MonoBehaviour
         Debug.LogError($"Invalid tile name format: {tileName}");
         return new Vector2Int(-1, -1);  // Invalid index
     }
+
+    // Highlight tiles around the Scout Ant
+    void HighlightSurroundingTiles(Vector2Int antPosition)
+    {
+        // Loop through the grid to check all tiles within the radius
+        for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
+        {
+            for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
+            {
+                // Check if the tile is within bounds
+                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+                {
+                    BaseTile tile = gridArray[x, y];
+                  
+                    if (tile != null&& tile.isWalkable)
+                    {
+                    
+                        tile.Highlight();
+                    }
+                }
+            }
+        }
+    }
+
+    void UnhighlightSurroundingTiles(Vector2Int antPosition)
+    {
+        // Loop through the grid to check all tiles within the radius (1 tile in all directions)
+        for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
+        {
+            for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
+            {
+                // Check if the tile is within bounds
+                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+                {
+                    BaseTile tile = gridArray[x, y];
+
+                    if (tile != null)
+                    {
+                        tile.Unhighlight();  // Unhighlight the tile
+                    }
+                }
+            }
+        }
+    }
+
 
 }

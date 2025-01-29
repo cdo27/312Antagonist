@@ -5,14 +5,15 @@ using UnityEngine;
 public class PlayerAnt : MonoBehaviour
 {
     public enum AntType { Scout, Builder, Warrior }
+    public AntType antType;
     public Vector2Int gridPosition;
     public int hpCount;
-    public int moveRadius;
 
     public bool hasMoved;
     public bool isMoving; //for movement sprite
     public bool usedAbility;
     public bool isDead;
+    public bool isHighlighted;
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +26,11 @@ public class PlayerAnt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-
-    void OnMouseDown()
-    {
-        Debug.Log("Player Ant was clicked!");
+    Vector2Int getPos(){
+        return gridPosition;
     }
+
 }

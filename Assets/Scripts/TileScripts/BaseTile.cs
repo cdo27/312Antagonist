@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseTile : MonoBehaviour
@@ -8,12 +6,25 @@ public class BaseTile : MonoBehaviour
     public TileType tileType;
     public bool isWalkable;
     public bool isDeployable;
+    public bool isHighlighted;
 
     public int xIndex;
     public int yIndex;
 
-    public virtual void PerformAction()
+    void Start()
     {
-        Debug.Log($"Tile of type {tileType} was interacted with.");
+
+
     }
+
+    public virtual void Highlight()
+    {
+
+    }
+
+    public virtual void Unhighlight()
+    {
+
+    }
+
 }
