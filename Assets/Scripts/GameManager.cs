@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 
         if(gameState == GameState.Player){
             gameState = GameState.QueenAnt;
+            turnQueenAnt();
         }
 
         // Update the game state text
@@ -49,9 +50,7 @@ public class GameManager : MonoBehaviour
         {
             gameStateText.text = $"Game State: {gameState}";
         }
-
-        // Example: Call any logic related to the new game state
-        turnQueenAnt();
+        
     }
 
 
