@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 public class GridManager : MonoBehaviour
 {
@@ -6,12 +8,17 @@ public class GridManager : MonoBehaviour
     public int gridSizeX = 8; // Number of tiles in the X direction
     public int gridSizeY = 8; // Number of tiles in the Y direction
 
-    // ref to gamestates
+    // ref to game objects
     public ScoutAnt scoutAnt;
+    public QueenAnt queenAnt;
     public GameManager gameManager;
     public UIManager uiManager;
 
     public int selectedAnt; //Scout = 0, Builder = 1
+
+    //QueenAnt path
+    private List<Vector2Int> queenPath;
+    private int currentPathIndex = 0; 
 
     void Start()
     {
@@ -50,6 +57,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        InitializeQueenPath();
 
         // log the grid after population
         Debug.Log("Grid Population Complete!");
@@ -105,7 +113,7 @@ public class GridManager : MonoBehaviour
 
             if(selectedAnt == 0){ //Scout Ant
                 uiManager.ShowScoutAntUI();
-                HighlightSurroundingTiles(scoutAnt.gridPosition);
+                if(scoutAnt.hasMoved == false) HighlightSurroundingTiles(scoutAnt.gridPosition);
             }
 
             
@@ -129,6 +137,18 @@ public class GridManager : MonoBehaviour
         //if the name format is invalid
         Debug.LogError($"Invalid tile name format: {tileName}");
         return new Vector2Int(-1, -1);  // Invalid index
+    }
+
+    // Initialize the Queen's predetermined path
+    void InitializeQueenPath()
+    {
+        // Define the path for QueenAnt
+        queenPath = new List<Vector2Int>()
+        {
+            new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(0, 3),
+            new Vector2Int(1, 3), new Vector2Int(2, 3), new Vector2Int(3, 3), new Vector2Int(4, 3),
+            new Vector2Int(5, 3), new Vector2Int(6, 3),  new Vector2Int(7, 3)
+        };
     }
 
     // Highlight tiles around the Scout Ant
@@ -184,8 +204,40 @@ public class GridManager : MonoBehaviour
         scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
         scoutAnt.transform.position = targetTile.transform.position;
         
+        scoutAnt.hasMoved = true;
 
-        //Set scoutAnt to hasMoved. Reset it in GameManager after player turn
+    }
+
+    public void moveQueen(){
+        if (queenPath != null && currentPathIndex < queenPath.Count)
+        {
+            // Get the target position from the path
+            Vector2Int targetPosition = queenPath[currentPathIndex];
+
+            // Find the BaseTile at the target position
+            BaseTile targetTile = gridArray[targetPosition.x, targetPosition.y];
+
+            if (targetTile != null)
+            {
+                // Move Queen to the new position
+                queenAnt.transform.position = targetTile.transform.position;
+
+                // Update Queen's grid position
+                queenAnt.gridPosition = targetPosition;
+
+                // Log the movement
+                Debug.Log($"Queen moved to ({targetPosition.x}, {targetPosition.y})");
+
+                // Increment the path index to move to the next tile in the next call
+                currentPathIndex++;
+            }
+        }
+        else
+        {
+            // Log if the Queen has completed the path
+            Debug.Log("Queen has completed her path!");
+        }
+
     }
 
 }

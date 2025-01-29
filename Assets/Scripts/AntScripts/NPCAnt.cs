@@ -5,6 +5,7 @@ using UnityEngine;
 public class NPCAnt : MonoBehaviour
 {
     public enum NPCType { QueenAnt, AntLion }
+    public NPCType npcType;
     public Vector2Int gridPosition;
     public int hpCount;
 
