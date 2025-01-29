@@ -123,7 +123,7 @@ public class GridManager : MonoBehaviour
 
                         //Click on Ability Tile
                         if(selectedAnt == 0 && baseTile.isAbilityTile){
-                            //function to reveal trap tiles
+                            RevealTrapTiles(scoutAnt.gridPosition);
                             Debug.Log("Revealed Trap Tiles!");
                             UnhighlightAllTiles();
                         }
@@ -273,6 +273,52 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    void RevealTrapTiles(Vector2Int antPosition)
+    {
+        // Loop through the grid to check all tiles within the radius
+        for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
+        {
+            for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
+            {
+                // Check if the tile is within bounds
+                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+                {
+                    BaseTile tile = gridArray[x, y];
+
+                    if (tile != null && tile is TrapTile) // Only reveal trap tiles
+                    {
+                        ((TrapTile)tile).RevealTrap();  // Call RevealTrap on trap tiles
+                    }
+                }
+            }
+        }
+
+        // Extend one more tile
+        int[,] extraTiles = {
+            {antPosition.x, antPosition.y + 2}, // Up
+            {antPosition.x, antPosition.y - 2}, // Down
+            {antPosition.x + 2, antPosition.y}, // Right
+            {antPosition.x - 2, antPosition.y}  // Left
+        };
+
+        for (int i = 0; i < extraTiles.GetLength(0); i++)
+        {
+            int x = extraTiles[i, 0];
+            int y = extraTiles[i, 1];
+
+            if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+            {
+                BaseTile tile = gridArray[x, y];
+                if (tile != null && tile is TrapTile)  // Only reveal trap tiles
+                {
+                    ((TrapTile)tile).RevealTrap();  // Call RevealTrap on trap tiles
+                }
+            }
+        }
+
+        scoutAnt.usedAbility = true;
     }
 
     void ShowBuildTiles(Vector2Int antPosition){
