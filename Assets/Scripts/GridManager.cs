@@ -11,8 +11,11 @@ public class GridManager : MonoBehaviour
     public GameManager gameManager;
     public UIManager uiManager;
 
+    public int selectedAnt; //Scout = 0, Builder = 1
+
     void Start()
     {
+        selectedAnt = -1;
         gridArray = new BaseTile[gridSizeX, gridSizeY];
 
         // Loop through all child objects under the grid parent
@@ -80,10 +83,13 @@ public class GridManager : MonoBehaviour
                         // Check if the clicked tile contains the ScoutAnt
                         if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                         {
-                            uiManager.ShowScoutAntUI();
-                            HighlightSurroundingTiles(scoutAnt.gridPosition);
-                            Debug.Log("Scout Ant is on this tile!");
-                            // You can add any additional logic here, like displaying a button or performing an action
+                            selectedAnt = 0;
+                            Debug.Log("Scout Ant Selected!");
+                        }
+
+                        //Move on hightlighted tiles
+                        if(selectedAnt == 0 && baseTile.isHighlighted){
+                            MoveScoutAnt(baseTile);
                         }
                         
                     }
@@ -91,9 +97,15 @@ public class GridManager : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1)) //Right click to deselect everything?
             {
+                selectedAnt = -1; //deselect ant
                 uiManager.HideScoutAntUI();
                 UnhighlightSurroundingTiles(scoutAnt.gridPosition);
-                Debug.Log("Right-click detected!");
+                Debug.Log("Deselect everything!");
+            }
+
+            if(selectedAnt == 0){ //Scout Ant
+                uiManager.ShowScoutAntUI();
+                HighlightSurroundingTiles(scoutAnt.gridPosition);
             }
 
             
@@ -163,5 +175,17 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    void MoveScoutAnt(BaseTile targetTile)
+    {
+        // Unhighlight the previous tile
+        UnhighlightSurroundingTiles(scoutAnt.gridPosition);
+
+        // Move the ScoutAnt to the target tile
+        scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
+        scoutAnt.transform.position = targetTile.transform.position;
+        
+
+        //Set scoutAnt to hasMoved. Reset it in GameManager after player turn
+    }
 
 }

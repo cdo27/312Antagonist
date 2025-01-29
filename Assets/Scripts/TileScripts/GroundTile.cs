@@ -30,7 +30,7 @@ public class GroundTile : BaseTile
     }
 
 
-     public override void Highlight()
+    public override void Highlight()
     {
         spriteRenderer.sprite = highlightedGroundTile; //chaneg to hightlight sprite
         isHighlighted = true;

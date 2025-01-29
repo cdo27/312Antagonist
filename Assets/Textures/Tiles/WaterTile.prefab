@@ -100,11 +100,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileType: 1
   isWalkable: 0
+  isDeployable: 0
+  isHighlighted: 0
   xIndex: 0
   yIndex: 0
   hasBridge: 0
   withoutBridge: {fileID: 21300000, guid: eb589b3057484504d8eb7af843e72672, type: 3}
   withBridge: {fileID: 21300000, guid: 46b943e9dcf8c8c41b71c2278c9d2de5, type: 3}
+  highlightedWaterTile: {fileID: 21300000, guid: 9b7abadfbd6804e43816fea76f47a38a, type: 3}
 --- !u!61 &-6972643618006608674
 BoxCollider2D:
   m_ObjectHideFlags: 0
