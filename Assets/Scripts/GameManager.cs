@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GridManager gridManager;
 
     public ScoutAnt scoutAnt;
+    public BuilderAnt builderAnt;
 
     void Start()
     {
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
         {
             gameStateText.text = $"Game State: {gameState}";
         }
+
+        //If one ant hasMoved, make other ants hasMoved for one turn moves
     }
 
     void OnEndTurnButtonClicked()
@@ -62,11 +65,16 @@ public class GameManager : MonoBehaviour
     //QueenAnt's turn
     void turnQueenAnt(){
         //reset all player ants move and ability
-        scoutAnt.hasMoved = false;
-        scoutAnt.usedAbility = false;
+        scoutAnt.resetAnt();
+        builderAnt.resetAnt();
 
         gridManager.moveQueen();
-        gameState = GameState.Player;
+
+        if (gameState != GameState.End)
+        {
+             gameState = GameState.Player;
+        }
+
         
         //move queenant one step towards nest.
     }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GridManager : MonoBehaviour
     // ref to game objects
     public ScoutAnt scoutAnt;
     public QueenAnt queenAnt;
+    public BuilderAnt builderAnt;
+
     public GameManager gameManager;
     public UIManager uiManager;
 
@@ -89,34 +92,57 @@ public class GridManager : MonoBehaviour
                        
                         //Check clicked tile for ants, show UI, highlight tiles
                         // Check if the clicked tile contains the ScoutAnt
-                        if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                         if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                         {
                             selectedAnt = 0;
                             Debug.Log("Scout Ant Selected!");
+                            uiManager.ShowScoutAntUI();
+                            uiManager.HideBuilderAntUI();
+                            UnhighlightAllTiles();
                         }
 
-                        //Move on hightlighted tiles
+                        else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            selectedAnt = 1;
+                            Debug.Log("Builder Ant Selected!");
+                            uiManager.ShowBuilderAntUI();
+                            uiManager.HideScoutAntUI();
+                            UnhighlightAllTiles();
+                        }
+
+                        //Click on Highlight Tile
                         if(selectedAnt == 0 && baseTile.isHighlighted){
-                            MoveScoutAnt(baseTile);
+                            MovePlayerAnt(scoutAnt, baseTile);
+                            UnhighlightAllTiles();
+                        }
+
+                        if(selectedAnt == 1 && baseTile.isHighlighted){
+                            MovePlayerAnt(builderAnt, baseTile);
+                            UnhighlightAllTiles();
+                        }
+
+                        //Click on Ability Tile
+                        if(selectedAnt == 0 && baseTile.isAbilityTile){
+                            //function to reveal trap tiles
+                            Debug.Log("Revealed Trap Tiles!");
+                            UnhighlightAllTiles();
                         }
                         
                     }
                 }
             }
-            if (Input.GetMouseButtonDown(1)) //Right click to deselect everything?
+            if (Input.GetMouseButtonDown(1) || selectedAnt == -1) //Right click to deselect everything?
             {
                 selectedAnt = -1; //deselect ant
+                //hide all ui
                 uiManager.HideScoutAntUI();
-                UnhighlightSurroundingTiles(scoutAnt.gridPosition);
-                Debug.Log("Deselect everything!");
+                uiManager.HideBuilderAntUI();
+                //unhighlight all ants
+                UnhighlightAllTiles();
+
+                //Debug.Log("Deselect everything!");
             }
 
-            if(selectedAnt == 0){ //Scout Ant
-                uiManager.ShowScoutAntUI();
-                if(scoutAnt.hasMoved == false) HighlightSurroundingTiles(scoutAnt.gridPosition);
-            }
-
-            
         }
     }
 
@@ -151,7 +177,7 @@ public class GridManager : MonoBehaviour
         };
     }
 
-    // Highlight tiles around the Scout Ant
+    // Highlight tiles around the Player Ant
     void HighlightSurroundingTiles(Vector2Int antPosition)
     {
         // Loop through the grid to check all tiles within the radius
@@ -174,9 +200,40 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void UnhighlightSurroundingTiles(Vector2Int antPosition)
+    void UnhighlightAllTiles()
     {
-        // Loop through the grid to check all tiles within the radius (1 tile in all directions)
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                BaseTile tile = gridArray[x, y];
+                if (tile != null)
+                {
+                    tile.Unhighlight();
+                    tile.UnhighlightAbilityTile();
+                }
+            }
+        }
+    }
+
+     //----Ability Functions----------------------------------------------------------------------
+
+    //Scout Ability Detect
+    public void OnDetectButtonPressed()
+    {
+        if (selectedAnt == 0) // Scout Ant
+        {
+            Debug.Log("Detect button pressed for Scout Ant!");
+            if (!scoutAnt.usedAbility)
+            {
+                ShowDetectTiles(scoutAnt.gridPosition);
+            }
+        }
+    }
+
+    void ShowDetectTiles(Vector2Int antPosition)
+    {
+        // Loop through the grid to check all tiles within the radius
         for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
         {
             for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
@@ -186,26 +243,79 @@ public class GridManager : MonoBehaviour
                 {
                     BaseTile tile = gridArray[x, y];
 
-                    if (tile != null)
+                    if (tile != null) //doesnt have to be walkable
                     {
-                        tile.Unhighlight();  // Unhighlight the tile
+                        tile.HighlightAbilityTile();
                     }
+                }
+            }
+        }
+
+        // Extend one more tile in the four cardinal directions
+        int[,] extraTiles = {
+            {antPosition.x, antPosition.y + 2}, // Up
+            {antPosition.x, antPosition.y - 2}, // Down
+            {antPosition.x + 2, antPosition.y}, // Right
+            {antPosition.x - 2, antPosition.y}  // Left
+        };
+
+        for (int i = 0; i < extraTiles.GetLength(0); i++)
+        {
+            int x = extraTiles[i, 0];
+            int y = extraTiles[i, 1];
+
+            if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+            {
+                BaseTile tile = gridArray[x, y];
+                if (tile != null)
+                {
+                    tile.HighlightAbilityTile();
                 }
             }
         }
     }
 
-    void MoveScoutAnt(BaseTile targetTile)
+    void ShowBuildTiles(Vector2Int antPosition){
+        
+    }
+
+    //----Move Functions----------------------------------------------------------------------
+
+    //Move Button pressed Highlight Tiles, applied to OnCLick()
+    public void OnMoveButtonPressed()
+    {
+        if (selectedAnt == 0) // Scout Ant
+        {
+            Debug.Log("Move button pressed for Scout Ant!");
+            UnhighlightAllTiles();
+            if (!scoutAnt.hasMoved)
+            {
+                HighlightSurroundingTiles(scoutAnt.gridPosition);
+            }
+        }
+        else if (selectedAnt == 1) // Builder Ant
+        {
+            Debug.Log("Move button pressed for Builder Ant!");
+            UnhighlightAllTiles();
+            if (!builderAnt.hasMoved)
+            {
+                HighlightSurroundingTiles(builderAnt.gridPosition);
+            }
+        }
+    }
+
+    //Move specified player ant to target tile
+    void MovePlayerAnt(PlayerAnt playerAnt, BaseTile targetTile)
     {
         // Unhighlight the previous tile
-        UnhighlightSurroundingTiles(scoutAnt.gridPosition);
+        UnhighlightAllTiles();
 
-        // Move the ScoutAnt to the target tile
-        scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-        scoutAnt.transform.position = targetTile.transform.position;
+        // Move the ant to the target tile
+        playerAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
+        playerAnt.transform.position = targetTile.transform.position;
         
-        scoutAnt.hasMoved = true;
-
+        playerAnt.hasMoved = true;
+        
     }
 
     public void moveQueen(){
@@ -217,8 +327,15 @@ public class GridManager : MonoBehaviour
             // Find the BaseTile at the target position
             BaseTile targetTile = gridArray[targetPosition.x, targetPosition.y];
 
-            if (targetTile != null)
+            if (targetTile != null && targetTile.isWalkable)
             {
+                // Check if an ant is already occupying the target position
+                if ((scoutAnt != null && scoutAnt.gridPosition == targetPosition) ||
+                    (builderAnt != null && builderAnt.gridPosition == targetPosition))
+                {
+                    Debug.Log($"Queen cannot move to ({targetPosition.x}, {targetPosition.y}) - an ant is already there!");
+                    return; // Stop movement if another ant is present
+                }
                 // Move Queen to the new position
                 queenAnt.transform.position = targetTile.transform.position;
 
@@ -228,7 +345,7 @@ public class GridManager : MonoBehaviour
                 // Log the movement
                 Debug.Log($"Queen moved to ({targetPosition.x}, {targetPosition.y})");
 
-                  // Check if the Queen has reached the winning position
+                // Check if the Queen has reached the winning position
                 if (targetPosition.x == 7 && targetPosition.y == 3)
                 {
                     // Trigger the game win logic

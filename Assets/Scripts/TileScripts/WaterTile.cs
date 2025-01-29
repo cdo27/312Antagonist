@@ -33,7 +33,7 @@ public class WaterTile : BaseTile
         spriteRenderer.sprite = withBridge;
     }
 
-        public override void Highlight()
+    public override void Highlight()
     {
         spriteRenderer.sprite = highlightedWaterTile; //chaneg to hightlight sprite
         isHighlighted = true;
@@ -45,6 +45,19 @@ public class WaterTile : BaseTile
         if(!hasBridge) spriteRenderer.sprite = withoutBridge; //restore
         if(hasBridge)spriteRenderer.sprite = withBridge; //restore
         isHighlighted = false;
+    }
+    
+    public override void HighlightAbilityTile()
+    {
+        spriteRenderer.sprite = highlightedWaterTile;
+        isAbilityTile = true;
+    }
+
+    public override void UnhighlightAbilityTile()
+    {
+        if(!hasBridge) spriteRenderer.sprite = withoutBridge;
+        if(hasBridge)spriteRenderer.sprite = withBridge;
+        isAbilityTile = false;
     }
 
 }

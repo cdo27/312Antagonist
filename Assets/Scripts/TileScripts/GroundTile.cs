@@ -42,5 +42,17 @@ public class GroundTile : BaseTile
         spriteRenderer.sprite = groundTile; //restore
         isHighlighted = false;
     }
+
+    public override void HighlightAbilityTile()
+    {
+        spriteRenderer.sprite = highlightedGroundTile;
+        isAbilityTile = true;
+    }
+
+    public override void UnhighlightAbilityTile()
+    {
+        spriteRenderer.sprite = groundTile;
+        isAbilityTile = false;
+    }
     
 }

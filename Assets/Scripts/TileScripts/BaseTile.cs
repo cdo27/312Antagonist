@@ -7,6 +7,7 @@ public class BaseTile : MonoBehaviour
     public bool isWalkable;
     public bool isDeployable;
     public bool isHighlighted;
+    public bool isAbilityTile;
 
     public int xIndex;
     public int yIndex;
@@ -23,6 +24,16 @@ public class BaseTile : MonoBehaviour
     }
 
     public virtual void Unhighlight()
+    {
+
+    }
+
+    public virtual void HighlightAbilityTile()
+    {
+
+    }
+
+    public virtual void UnhighlightAbilityTile()
     {
 
     }

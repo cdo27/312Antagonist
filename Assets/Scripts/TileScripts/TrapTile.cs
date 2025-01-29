@@ -29,7 +29,7 @@ public class TrapTile : BaseTile
         spriteRenderer.sprite = revealedTrap;
     }
 
-        public override void Highlight()
+    public override void Highlight()
     {
         spriteRenderer.sprite = highlightedTrapTile; //chaneg to hightlight sprite
         isHighlighted = true;
@@ -41,5 +41,18 @@ public class TrapTile : BaseTile
         if(isRevealed) spriteRenderer.sprite = revealedTrap; //restore
         if(!isRevealed) spriteRenderer.sprite = hiddenTrap; //restore
         isHighlighted = false;
+    }
+
+    public override void HighlightAbilityTile()
+    {
+        spriteRenderer.sprite = highlightedTrapTile;
+        isAbilityTile = true;
+    }
+
+    public override void UnhighlightAbilityTile()
+    {
+        if(isRevealed) spriteRenderer.sprite = revealedTrap;
+        if(!isRevealed) spriteRenderer.sprite = hiddenTrap;
+        isAbilityTile = false;
     }
 }
