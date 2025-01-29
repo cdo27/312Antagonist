@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState { Deploy, Player, Enemy, QueenAnt }
+    public enum GameState { Deploy, Player, Enemy, QueenAnt, End }
     public GameState gameState;
     public TextMeshProUGUI gameStateText;
     public Button endTurnButton;
@@ -32,11 +32,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-
+        // Update the game state text
+        if (gameStateText != null)
+        {
+            gameStateText.text = $"Game State: {gameState}";
+        }
     }
 
     void OnEndTurnButtonClicked()
     {
+        gridManager.selectedAnt = -1;
         // Handle the button click logic here
         Debug.Log("End Turn Button Clicked!");
 
@@ -62,11 +67,19 @@ public class GameManager : MonoBehaviour
 
         gridManager.moveQueen();
         gameState = GameState.Player;
+        
         //move queenant one step towards nest.
     }
 
     //AntLion's turn
     void turnAntLion(){
 
+    }
+
+    public void WinGame(){
+        //when queen reaches end
+        Debug.Log("Queen has completed her path! You win!");
+        gameState = GameState.End;
+        gameStateText.text = $"Game State: {gameState}";
     }
 }

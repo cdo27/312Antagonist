@@ -228,6 +228,12 @@ public class GridManager : MonoBehaviour
                 // Log the movement
                 Debug.Log($"Queen moved to ({targetPosition.x}, {targetPosition.y})");
 
+                  // Check if the Queen has reached the winning position
+                if (targetPosition.x == 7 && targetPosition.y == 3)
+                {
+                    // Trigger the game win logic
+                    gameManager.WinGame();
+                }
                 // Increment the path index to move to the next tile in the next call
                 currentPathIndex++;
             }
@@ -235,7 +241,7 @@ public class GridManager : MonoBehaviour
         else
         {
             // Log if the Queen has completed the path
-            Debug.Log("Queen has completed her path!");
+            //Debug.Log("Queen has completed her path!");
         }
 
     }
