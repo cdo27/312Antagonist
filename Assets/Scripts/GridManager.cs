@@ -226,6 +226,7 @@ public class GridManager : MonoBehaviour
             Debug.Log("Detect button pressed for Scout Ant!");
             if (!scoutAnt.usedAbility)
             {
+                UnhighlightAllTiles();
                 ShowDetectTiles(scoutAnt.gridPosition);
             }
         }
@@ -353,9 +354,7 @@ public class GridManager : MonoBehaviour
     //Move specified player ant to target tile
     void MovePlayerAnt(PlayerAnt playerAnt, BaseTile targetTile)
     {
-        // Unhighlight the previous tile
         UnhighlightAllTiles();
-
         // Move the ant to the target tile
         playerAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
         playerAnt.transform.position = targetTile.transform.position;
