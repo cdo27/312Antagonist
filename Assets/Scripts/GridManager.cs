@@ -183,7 +183,7 @@ public class GridManager : MonoBehaviour
         };
     }
 
-    // Highlight tiles around the Player Ant
+    // Highlight tiles around the Player Ant, for move function
     void HighlightSurroundingTiles(Vector2Int antPosition)
     {
         // Update list of all other ant positions, for preventing moving onto or using ability there
@@ -195,6 +195,7 @@ public class GridManager : MonoBehaviour
             antLion.gridPosition,
             antLionSecond.gridPosition
         };
+
         // Loop through the grid to check all tiles within the radius
         for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
         {
@@ -422,6 +423,49 @@ public class GridManager : MonoBehaviour
             //Debug.Log("Queen has completed her path!");
         }
 
+    }
+
+    public void moveAntLion()
+    {
+        // Get the Queen's current position
+        Vector2Int queenPosition = queenAnt.gridPosition;
+
+        // Get the current AntLion position
+        Vector2Int antLionPosition = antLion.gridPosition;
+
+        // Calculate the direction toward the Queen's position
+        Vector2Int direction = new Vector2Int(
+            (int)Mathf.Sign(queenPosition.x - antLionPosition.x),
+            (int)Mathf.Sign(queenPosition.y - antLionPosition.y)
+        );
+
+        // Calculate the next position
+        Vector2Int nextPosition = new Vector2Int(antLionPosition.x + direction.x, antLionPosition.y + direction.y);
+
+        // find basetile at target pos
+        BaseTile targetTile = gridArray[nextPosition.x, nextPosition.y];
+
+        if (targetTile != null && targetTile.isWalkable) {
+            // check if any ants are on target position
+            if ((scoutAnt != null && scoutAnt.gridPosition == nextPosition) ||
+                (builderAnt != null && builderAnt.gridPosition == nextPosition)) {
+                Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - an ant is already there!");
+                return;
+            }
+
+            // Move AntLion to the new position
+            antLion.transform.position = targetTile.transform.position;
+
+            // Update AntLion's grid position
+            antLion.gridPosition = nextPosition;
+
+            Debug.Log($"AntLion moved to ({nextPosition.x}, {nextPosition.y})");
+
+            //add logic for reaching queen position, attack
+
+        } else {
+            Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - it's not walkable.");
+        }
     }
 
 }

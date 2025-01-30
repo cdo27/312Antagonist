@@ -72,16 +72,22 @@ public class GameManager : MonoBehaviour
 
         if (gameState != GameState.End)
         {
-             gameState = GameState.Player;
+            gameState = GameState.Enemy;
+            turnAntLion();
         }
-
-        
         //move queenant one step towards nest.
     }
 
     //AntLion's turn
     void turnAntLion(){
+        gridManager.moveAntLion(); //move antlion towards queen
 
+        Debug.Log($"Moved antlion");
+        if (gameState != GameState.End)
+        {
+             Debug.Log($"Back to player turn");
+            gameState = GameState.Player;
+        }
     }
 
     public void WinGame(){
