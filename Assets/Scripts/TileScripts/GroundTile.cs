@@ -6,14 +6,26 @@ public class GroundTile : BaseTile
 {
     public Sprite deployableTile;
     public Sprite groundTile;
+    public Sprite groundObstacleTile; //sprite with obstacle
     public Sprite highlightedGroundTile; //sprite when highlighted
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
+
+    public bool hasObstacle;
 
     void Start()
     {
         tileType = TileType.Ground;
         isWalkable = true;
+        hasObstacle = false;
         spriteRenderer = GetComponent<SpriteRenderer>(); // Get the main tile sprite
+    }
+
+    public void buildObstacle(){
+        isWalkable = false;
+        hasObstacle = true;
+        spriteRenderer.sprite = groundObstacleTile;
+        Debug.Log("Obstacle sprite changed");
+        // change sprite to ground tile with obstacle
     }
 
     public void ShowDeployableTiles()
@@ -39,7 +51,8 @@ public class GroundTile : BaseTile
 
     public override void Unhighlight()
     {
-        spriteRenderer.sprite = groundTile; //restore
+        if (hasObstacle) spriteRenderer.sprite = groundObstacleTile;
+        else spriteRenderer.sprite = groundTile; 
         isHighlighted = false;
     }
 
@@ -51,7 +64,8 @@ public class GroundTile : BaseTile
 
     public override void UnhighlightAbilityTile()
     {
-        spriteRenderer.sprite = groundTile;
+        if (hasObstacle) spriteRenderer.sprite = groundObstacleTile;
+        else spriteRenderer.sprite = groundTile; 
         isAbilityTile = false;
     }
     
