@@ -17,6 +17,7 @@ public class WaterTile : BaseTile
         tileType = TileType.Water;
         isWalkable = false; // Not walkable until a bridge is built
         isDeployable = false;
+        tileInfoUI = FindObjectOfType<TileInformationUI>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = withoutBridge; 
     }
@@ -31,6 +32,24 @@ public class WaterTile : BaseTile
         isWalkable = true;
         Debug.Log("A bridge has been built. Tile is now walkable.");
         spriteRenderer.sprite = withBridge;
+    }
+
+    //shows tile information in the bottom right box.
+    void OnMouseEnter()
+    {
+        Debug.Log(tileType);
+        if (tileInfoUI != null)
+        {
+            tileInfoUI.ShowTileInformation(tileType.ToString());
+        }
+    }
+    //and hides it again when out
+    void OnMouseExit()
+    {
+        if (tileInfoUI != null)
+        {
+            tileInfoUI.HideTileInformation();
+        }
     }
 
     public override void Highlight()
