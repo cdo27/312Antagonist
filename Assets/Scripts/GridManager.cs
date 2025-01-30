@@ -13,6 +13,8 @@ public class GridManager : MonoBehaviour
     public ScoutAnt scoutAnt;
     public QueenAnt queenAnt;
     public BuilderAnt builderAnt;
+    public AntLion antLion;
+    public AntLion antLionSecond;
 
     public GameManager gameManager;
     public UIManager uiManager;
@@ -22,6 +24,9 @@ public class GridManager : MonoBehaviour
     //QueenAnt path
     private List<Vector2Int> queenPath;
     private int currentPathIndex = 0; 
+
+    //Ant's positions on grid
+    private List<Vector2Int> otherAntPositions;
 
     void Start()
     {
@@ -143,6 +148,7 @@ public class GridManager : MonoBehaviour
                 //Debug.Log("Deselect everything!");
             }
 
+
         }
     }
 
@@ -180,19 +186,29 @@ public class GridManager : MonoBehaviour
     // Highlight tiles around the Player Ant
     void HighlightSurroundingTiles(Vector2Int antPosition)
     {
+        // Update list of all other ant positions, for preventing moving onto or using ability there
+        List<Vector2Int> otherAntPositions = new List<Vector2Int>
+        {
+            scoutAnt.gridPosition,
+            queenAnt.gridPosition,
+            builderAnt.gridPosition,
+            antLion.gridPosition,
+            antLionSecond.gridPosition
+        };
         // Loop through the grid to check all tiles within the radius
         for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
         {
             for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
             {
-                // Check if the tile is within bounds
-                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+                Vector2Int currentPos = new Vector2Int(x, y);
+
+                // Check if the tile is within bounds and not occupied by another ant
+                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY && !otherAntPositions.Contains(currentPos))
                 {
                     BaseTile tile = gridArray[x, y];
-                  
-                    if (tile != null&& tile.isWalkable)
+
+                    if (tile != null && tile.isWalkable)
                     {
-                    
                         tile.Highlight();
                     }
                 }
