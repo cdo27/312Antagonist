@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a47bc3c748b028f48b559ae5f0ec2af1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - tileInformationText: {instanceID: 0}
+  - tileInformationImage: {instanceID: 0}
+  - groundTile: {fileID: 21300000, guid: 46b943e9dcf8c8c41b71c2278c9d2de5, type: 3}
+  - waterTile: {fileID: 21300000, guid: eb589b3057484504d8eb7af843e72672, type: 3}
+  - trapTile: {fileID: 21300000, guid: 76b41108d47e6c04586c60c2c4db67a5, type: 3}
+  - deployTile: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

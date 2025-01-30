@@ -18,6 +18,7 @@ public class GroundTile : BaseTile
         isWalkable = true;
         hasObstacle = false;
         spriteRenderer = GetComponent<SpriteRenderer>(); // Get the main tile sprite
+        tileInfoUI = FindObjectOfType<TileInformationUI>();
     }
 
     public void buildObstacle(){
@@ -39,6 +40,24 @@ public class GroundTile : BaseTile
     public void HideDeployableTiles()
     {
         spriteRenderer.sprite = groundTile; 
+    }
+
+    //shows tile information in the bottom right box.
+    void OnMouseEnter()
+    {
+        Debug.Log(tileType);
+        if (tileInfoUI != null)
+        {
+            tileInfoUI.ShowTileInformation(tileType.ToString()); 
+        }
+    }
+    //and hides it again when out
+    void OnMouseExit()
+    {
+        if (tileInfoUI != null)
+        {
+            tileInfoUI.HideTileInformation();
+        }
     }
 
 

@@ -12,11 +12,23 @@ public class BaseTile : MonoBehaviour
     public int xIndex;
     public int yIndex;
 
+    public TileInformationUI tileInfoUI;
+
     void Start()
     {
-
-
+       
     }
+
+    void OnMouseEnter()
+    {
+      
+    }
+
+    void OnMouseExit()
+    {
+       
+    }
+
 
     public virtual void Highlight()
     {
