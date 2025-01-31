@@ -43,9 +43,10 @@ public class GameManager : MonoBehaviour
             gameStateText.text = $"Game State: {gameState}";
         }
 
-        if (queenAnt.isDead){
-            uiManager.ShowGameOverScreen();
-        } 
+        if (queenAnt.isDead && gameState != GameState.End)
+        {
+        HandleQueenAntDefeat();
+        }
 
         //If one ant hasMoved, make other ants hasMoved for one turn move
     }
@@ -117,4 +118,12 @@ public class GameManager : MonoBehaviour
     public void ReturnToMenu(){
         SceneManager.LoadScene("Menu");
     }
+    public void HandleQueenAntDefeat()
+    {
+    Debug.Log("Game Over! QueenAnt has been defeated.");
+    gameState = GameState.End;
+    gameStateText.text = "Game Over!";
+    uiManager.ShowGameOverScreen(); // Display Game Over UI
+    }
+
 }

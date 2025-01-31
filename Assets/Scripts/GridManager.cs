@@ -754,40 +754,55 @@ public class GridManager : MonoBehaviour
 
 private void moveAntLionIndividual(AntLion antLion)
 {
+    // Check if an attackable ant is within 1 tile before moving
+    NPCAnt queenAntTarget = CheckForAttackableQueenAnt(antLion.gridPosition);
+    if (queenAntTarget != null)
+    {
+        AttackAnt(antLion, queenAntTarget);
+        return; // End turn after attacking
+    }
+
+    PlayerAnt playerAntTarget = CheckForAttackablePlayerAnt(antLion.gridPosition);
+    if (playerAntTarget != null)
+    {
+        AttackAnt(antLion, playerAntTarget);
+        return; // End turn after attacking
+    }
+
+    // If no attackable ant is found, proceed with movement
     Vector2Int targetPosition;
     Vector2Int queenPosition = queenAnt.gridPosition;
     Vector2Int antLionPosition = antLion.gridPosition;
 
-    // First, attempt to move towards the QueenAnt
+    // Move towards QueenAnt first
     int dx = Mathf.Clamp(queenPosition.x - antLionPosition.x, -1, 1);
     int dy = Mathf.Clamp(queenPosition.y - antLionPosition.y, -1, 1);
     Vector2Int nextPositionTowardsQueen = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
 
-    // Check if the next position towards the QueenAnt is viable
     if (isMoveViable(nextPositionTowardsQueen, queenPosition))
     {
         targetPosition = nextPositionTowardsQueen;
     }
     else
     {
-        // Find the closest player ant position
+        // Move towards the closest player ant
         Vector2Int closestPlayerAntPosition = findClosestPlayerAntPosition(antLionPosition);
-        // Calculate step towards closest player ant
         dx = Mathf.Clamp(closestPlayerAntPosition.x - antLionPosition.x, -1, 1);
         dy = Mathf.Clamp(closestPlayerAntPosition.y - antLionPosition.y, -1, 1);
         Vector2Int nextStepTowardsPlayerAnt = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
 
-        // Use this step if it's a viable move
-        if (isMoveViable(nextStepTowardsPlayerAnt, queenPosition)) {
+        if (isMoveViable(nextStepTowardsPlayerAnt, queenPosition))
+        {
             targetPosition = nextStepTowardsPlayerAnt;
-        } else {
-            // If no viable move is found, remain in the current position
-            targetPosition = antLionPosition;
+        }
+        else
+        {
+            targetPosition = antLionPosition; // Stay in place if no move is possible
         }
     }
 
     // Move AntLion to the determined position
-    if (targetPosition.x >= 0 && targetPosition.x < gridSizeX && targetPosition.y >= 0 && targetPosition.y < gridSizeY)
+    if (targetPosition != antLionPosition)
     {
         BaseTile targetTile = gridArray[targetPosition.x, targetPosition.y];
         if (targetTile != null && targetTile.isWalkable)
@@ -795,23 +810,118 @@ private void moveAntLionIndividual(AntLion antLion)
             antLion.transform.position = targetTile.transform.position;
             antLion.gridPosition = targetPosition;
             Debug.Log($"AntLion moved to ({targetPosition.x}, {targetPosition.y})");
-
-            if (targetPosition == queenPosition)
-            {
-                Debug.Log("AntLion has caught the QueenAnt!");
-                queenAnt.isDead = true;  // Implement game over or capture logic here
-            }
-        }
-        else
-        {
-            Debug.Log($"AntLion cannot move to ({targetPosition.x}, {targetPosition.y}) - tile not walkable or occupied.");
         }
     }
-    else
+
+    // After moving, check for attackable ants again
+    queenAntTarget = CheckForAttackableQueenAnt(antLion.gridPosition);
+    if (queenAntTarget != null)
     {
-        Debug.Log($"AntLion movement out of bounds ({targetPosition.x}, {targetPosition.y}).");
+        AttackAnt(antLion, queenAntTarget);
+        return;
+    }
+
+    playerAntTarget = CheckForAttackablePlayerAnt(antLion.gridPosition);
+    if (playerAntTarget != null)
+    {
+        AttackAnt(antLion, playerAntTarget);
     }
 }
+private NPCAnt CheckForAttackableQueenAnt(Vector2Int antLionPosition)
+{
+    Vector2Int[] directions = {
+        new Vector2Int(0, 1), new Vector2Int(0, -1), 
+        new Vector2Int(1, 0), new Vector2Int(-1, 0)
+    };
+
+    foreach (Vector2Int dir in directions)
+    {
+        Vector2Int checkPos = antLionPosition + dir;
+        if (queenAnt != null && queenAnt.gridPosition == checkPos)
+        {
+            return queenAnt; // Found QueenAnt in attack range
+        }
+    }
+
+    return null;
+}
+private PlayerAnt CheckForAttackablePlayerAnt(Vector2Int antLionPosition)
+{
+    List<PlayerAnt> playerAnts = new List<PlayerAnt> { scoutAnt, builderAnt, soldierAnt };
+    PlayerAnt closestAnt = null;
+    float minDistance = float.MaxValue;
+
+    Vector2Int[] directions = {
+        new Vector2Int(0, 1), new Vector2Int(0, -1), 
+        new Vector2Int(1, 0), new Vector2Int(-1, 0)
+    };
+
+    foreach (PlayerAnt ant in playerAnts)
+    {
+        if (ant == null) continue;
+
+        foreach (Vector2Int dir in directions)
+        {
+            Vector2Int checkPos = antLionPosition + dir;
+            if (ant.gridPosition == checkPos)
+            {
+                float distance = Vector2Int.Distance(antLionPosition, ant.gridPosition);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestAnt = ant;
+                }
+            }
+        }
+    }
+
+    return closestAnt; // Return the closest player ant in attack range
+}
+private void AttackAnt(AntLion antLion, NPCAnt targetAnt)
+{
+    if (targetAnt == null || targetAnt.isDead) return;
+
+    Debug.Log($"{antLion.name} attacks {targetAnt.name}!");
+    targetAnt.hpCount -= 1; // Reduce HP by 1
+
+    if (targetAnt.hpCount <= 0)
+    {
+        targetAnt.isDead = true;
+        Debug.Log($"{targetAnt.name} has been defeated!");
+    }
+    // If the attacked ant is QueenAnt, notify GameManager
+    if (targetAnt == queenAnt)
+        {
+            gameManager.HandleQueenAntDefeat();
+        }
+}
+
+private void AttackAnt(AntLion antLion, PlayerAnt targetAnt)
+{
+    if (targetAnt == null || targetAnt.isDead) return;
+
+    Debug.Log($"{antLion.name} attacks {targetAnt.name}!");
+    targetAnt.loseHP(); // Reduce HP by 1
+
+    if (targetAnt.hpCount <= 0)
+    {
+        targetAnt.isDead = true;
+        Debug.Log($"{targetAnt.name} has been defeated!");
+
+        // Remove the ant from play
+        RemovePlayerAnt(targetAnt);
+    }
+}
+private void RemovePlayerAnt(PlayerAnt targetAnt)
+{
+    if (targetAnt == scoutAnt) scoutAnt = null;
+    else if (targetAnt == builderAnt) builderAnt = null;
+    else if (targetAnt == soldierAnt) soldierAnt = null;
+
+    Destroy(targetAnt.gameObject); // Remove from scene
+}
+
+
 
 private bool isMoveViable(Vector2Int position, Vector2Int queenPosition)
 {
