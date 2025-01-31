@@ -28,6 +28,9 @@ public class GridManager : MonoBehaviour
     //Ant's positions on grid
     private List<Vector2Int> otherAntPositions;
 
+    //GroundTile for replacing
+    public GroundTile groundTilePrefab;
+
     void Start()
     {
         selectedAnt = -1;
@@ -127,25 +130,16 @@ public class GridManager : MonoBehaviour
                         }
 
                         //Click on Ability Tile ----------------------------
+                        // Scout Ant Ability Detect
                         if(selectedAnt == 0 && baseTile.isAbilityTile){
                             RevealTrapTiles(scoutAnt.gridPosition);
                             Debug.Log("Revealed Trap Tiles!");
                             UnhighlightAllTiles();
                         }
 
+                        // Builder Ant Ability Build
                         if(selectedAnt == 1 && baseTile.isAbilityTile){
-                            baseTile.isWalkable = true;
-                            
-                            // Building ona  water tile
-                            if (baseTile.tileType == BaseTile.TileType.Water) {
-                                ((WaterTile)baseTile).BuildBridge();
-                                Debug.Log("Built a Bridge!");
-                            }
-                            // Building on a ground tile
-                            if (baseTile.tileType == BaseTile.TileType.Ground) {
-                                ((GroundTile)baseTile).buildObstacle();
-                                Debug.Log("Built an Obstacle");
-                            }
+                            BuildOnTile(baseTile);
                             UnhighlightAllTiles();
                         }
                         
@@ -399,6 +393,55 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void BuildOnTile(BaseTile baseTile){
+        // Building ona  water tile (replace with ground tile?)
+        if (baseTile.tileType == BaseTile.TileType.Water) {
+            ((WaterTile)baseTile).BuildBridge();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built a Bridge!");
+        }
+        // Building on a ground tile
+        if (baseTile.tileType == BaseTile.TileType.Ground) {
+            ((GroundTile)baseTile).buildObstacle();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built an Obstacle!");
+        }
+
+        // Building on a trap tile (replace with ground tile)
+        if (baseTile.tileType == BaseTile.TileType.Trap) {
+
+            // grid pos
+            Vector2Int gridPos = new Vector2Int(baseTile.xIndex, baseTile.yIndex);
+
+            // Check if valid
+            if (gridPos.x >= 0 && gridPos.x < gridSizeX && gridPos.y >= 0 && gridPos.y < gridSizeY) {
+                
+                // Replace tile
+                GroundTile newGroundTile = Instantiate(groundTilePrefab, baseTile.transform.position, Quaternion.identity);
+
+                // Set to the same as the original tile
+                newGroundTile.transform.SetParent(baseTile.transform.parent);
+                newGroundTile.name = baseTile.name;
+                newGroundTile.xIndex = baseTile.xIndex;
+                newGroundTile.yIndex = baseTile.yIndex;
+
+                // Update the new tile type and sprite
+                newGroundTile.tileType = BaseTile.TileType.Ground;
+                newGroundTile.HideDeployableTiles();
+
+                // Update the grid array with new 
+                gridArray[gridPos.x, gridPos.y] = newGroundTile;
+
+                // Destroy the old TrapTile
+                Destroy(baseTile.gameObject);
+
+                builderAnt.usedAbility = true;
+                Debug.Log("Buried Trap and Replaced with Ground Tile!");
+            }
+        }
+
     }
 
     //----Move Functions----------------------------------------------------------------------

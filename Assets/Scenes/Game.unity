@@ -9154,6 +9154,7 @@ MonoBehaviour:
   gameStateText: {fileID: 194590024}
   scoutAntUI: {fileID: 508015849}
   builderAntUI: {fileID: 2136401948}
+  tileInfoUI: {fileID: 0}
 --- !u!1 &2035214944
 GameObject:
   m_ObjectHideFlags: 0
@@ -9272,6 +9273,7 @@ MonoBehaviour:
   gameManager: {fileID: 808538156}
   uiManager: {fileID: 1954570221}
   selectedAnt: 0
+  groundTilePrefab: {fileID: 4574570385499563161, guid: 5565a3c133e00f0459fe39a11987fe15, type: 3}
 --- !u!1 &2037312799
 GameObject:
   m_ObjectHideFlags: 0
