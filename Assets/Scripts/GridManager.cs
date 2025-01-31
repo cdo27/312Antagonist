@@ -450,24 +450,37 @@ public class GridManager : MonoBehaviour
     //Fourth, with the target selected, choose the tile you want to throw that target to.
     void showTileToThrowTo()
     {
-        // Loop through the grid to check all tiles within the radius (adjacent and diagonal)
-        for (int x = soldierAnt.gridPosition.x - 1; x <= soldierAnt.gridPosition.x + 1; x++)
-        {
-            for (int y = soldierAnt.gridPosition.y - 1; y <= soldierAnt.gridPosition.y + 1; y++)
-            {
-                // Check if the tile is within bounds
-                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
-                {
-                    BaseTile tile = gridArray[x, y];
+        // Define the four cardinal directions with one-step and two-step distances
+        int[,] targetTiles = {
+            {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y + 1}, // Up 1 step
+            {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y + 2}, // Up 2 steps
+            {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y - 1}, // Down 1 step
+            {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y - 2}, // Down 2 steps
+            {soldierAnt.gridPosition.x + 1, soldierAnt.gridPosition.y}, // Right 1 step
+            {soldierAnt.gridPosition.x + 2, soldierAnt.gridPosition.y}, // Right 2 steps
+            {soldierAnt.gridPosition.x - 1, soldierAnt.gridPosition.y}, // Left 1 step
+            {soldierAnt.gridPosition.x - 2, soldierAnt.gridPosition.y}  // Left 2 steps
+        };
 
-                    if (tile != null) // Doesn't have to be walkable
-                    {
-                        tile.HighlightAbilityTile(); // Highlight the surrounding tiles
-                    }
+        // Loop through the defined target positions
+        for (int i = 0; i < targetTiles.GetLength(0); i++)
+        {
+            int x = targetTiles[i, 0];
+            int y = targetTiles[i, 1];
+
+            // Check if the tile is within bounds
+            if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+            {
+                BaseTile tile = gridArray[x, y];
+                if (tile != null)
+                {
+                    tile.HighlightAbilityTile(); // Highlight valid tiles
                 }
             }
         }
     }
+
+    //Fifth, actually throw the target
     void ThrowCharacter(BaseTile targetTile)
     {
         switch (soldierThrowTarget)
