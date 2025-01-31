@@ -748,60 +748,99 @@ public class GridManager : MonoBehaviour
 
     public void moveAntLion()
 {
-    // Get the Queen's current position
-    Vector2Int queenPosition = queenAnt.gridPosition;
+    moveAntLionIndividual(antLion);
+    moveAntLionIndividual(antLionSecond);
+}
 
-    // Get the current AntLion position
+private void moveAntLionIndividual(AntLion antLion)
+{
+    Vector2Int targetPosition;
+    Vector2Int queenPosition = queenAnt.gridPosition;
     Vector2Int antLionPosition = antLion.gridPosition;
 
-    // Determine the direction to move by comparing positions
+    // First, attempt to move towards the QueenAnt
     int dx = Mathf.Clamp(queenPosition.x - antLionPosition.x, -1, 1);
     int dy = Mathf.Clamp(queenPosition.y - antLionPosition.y, -1, 1);
+    Vector2Int nextPositionTowardsQueen = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
 
-    // Generate a new position for the AntLion to move to
-    Vector2Int nextPosition = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
-
-    // Access the BaseTile at the next position
-    if (nextPosition.x >= 0 && nextPosition.x < gridSizeX && nextPosition.y >= 0 && nextPosition.y < gridSizeY)
+    // Check if the next position towards the QueenAnt is viable
+    if (isMoveViable(nextPositionTowardsQueen, queenPosition))
     {
-        BaseTile targetTile = gridArray[nextPosition.x, nextPosition.y];
+        targetPosition = nextPositionTowardsQueen;
+    }
+    else
+    {
+        // Find the closest player ant position
+        Vector2Int closestPlayerAntPosition = findClosestPlayerAntPosition(antLionPosition);
+        // Calculate step towards closest player ant
+        dx = Mathf.Clamp(closestPlayerAntPosition.x - antLionPosition.x, -1, 1);
+        dy = Mathf.Clamp(closestPlayerAntPosition.y - antLionPosition.y, -1, 1);
+        Vector2Int nextStepTowardsPlayerAnt = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
 
-        // Ensure the tile is walkable and not currently occupied by any ant other than the QueenAnt
-        if (targetTile != null && targetTile.isWalkable && !IsTileOccupiedByOtherAnts(nextPosition, queenPosition))
+        // Use this step if it's a viable move
+        if (isMoveViable(nextStepTowardsPlayerAnt, queenPosition)) {
+            targetPosition = nextStepTowardsPlayerAnt;
+        } else {
+            // If no viable move is found, remain in the current position
+            targetPosition = antLionPosition;
+        }
+    }
+
+    // Move AntLion to the determined position
+    if (targetPosition.x >= 0 && targetPosition.x < gridSizeX && targetPosition.y >= 0 && targetPosition.y < gridSizeY)
+    {
+        BaseTile targetTile = gridArray[targetPosition.x, targetPosition.y];
+        if (targetTile != null && targetTile.isWalkable)
         {
-            // check if any ants are on target position
-            if ((scoutAnt != null && scoutAnt.gridPosition == nextPosition) ||
-                (builderAnt != null && builderAnt.gridPosition == nextPosition) ||
-                (soldierAnt != null && soldierAnt.gridPosition == nextPosition)) {
-                Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - an ant is already there!");
-                return;
-            }
-
-            // Move AntLion to the new position
             antLion.transform.position = targetTile.transform.position;
-            antLion.gridPosition = nextPosition;
+            antLion.gridPosition = targetPosition;
+            Debug.Log($"AntLion moved to ({targetPosition.x}, {targetPosition.y})");
 
-            Debug.Log($"AntLion moved to ({nextPosition.x}, {nextPosition.y})");
-
-            // Check for overlap with the QueenAnt
-            if (nextPosition == queenPosition)
+            if (targetPosition == queenPosition)
             {
                 Debug.Log("AntLion has caught the QueenAnt!");
-                queenAnt.isDead = true;
-                    // Implement any game logic needed when the AntLion catches the QueenAnt
-
+                queenAnt.isDead = true;  // Implement game over or capture logic here
             }
-            }
+        }
         else
         {
-            Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - tile not walkable or occupied.");
+            Debug.Log($"AntLion cannot move to ({targetPosition.x}, {targetPosition.y}) - tile not walkable or occupied.");
         }
     }
     else
     {
-        Debug.Log($"AntLion movement out of bounds ({nextPosition.x}, {nextPosition.y}).");
+        Debug.Log($"AntLion movement out of bounds ({targetPosition.x}, {targetPosition.y}).");
     }
 }
+
+private bool isMoveViable(Vector2Int position, Vector2Int queenPosition)
+{
+    return position.x >= 0 && position.x < gridSizeX && position.y >= 0 && position.y < gridSizeY
+        && gridArray[position.x, position.y].isWalkable && !IsTileOccupiedByOtherAnts(position, queenPosition);
+}
+
+private Vector2Int findClosestPlayerAntPosition(Vector2Int antLionPosition)
+{
+    List<PlayerAnt> playerAnts = new List<PlayerAnt> { scoutAnt, builderAnt, soldierAnt };
+    PlayerAnt closestAnt = null;
+    float minDistance = float.MaxValue;
+
+    foreach (PlayerAnt ant in playerAnts)
+    {
+        if (ant != null)
+        {
+            float distance = Vector2.Distance(antLionPosition, ant.gridPosition);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestAnt = ant;
+            }
+        }
+    }
+
+    return closestAnt != null ? closestAnt.gridPosition : antLionPosition; // Return current position if no ant found
+}
+
 
 
     public void ResetPlayer()
