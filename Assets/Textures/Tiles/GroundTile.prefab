@@ -102,11 +102,14 @@ MonoBehaviour:
   isWalkable: 1
   isDeployable: 0
   isHighlighted: 0
+  isAbilityTile: 0
   xIndex: 0
   yIndex: 0
   deployableTile: {fileID: 21300000, guid: c664507409992a640bd787d622bf836a, type: 3}
   groundTile: {fileID: 21300000, guid: 46b943e9dcf8c8c41b71c2278c9d2de5, type: 3}
+  groundObstacleTile: {fileID: 21300000, guid: 78ee62784d8c7ec4f92e62c8c41e7424, type: 3}
   highlightedGroundTile: {fileID: 21300000, guid: 9b7abadfbd6804e43816fea76f47a38a, type: 3}
+  spriteRenderer: {fileID: 8412954292104863750}
 --- !u!61 &-9158368740084564627
 BoxCollider2D:
   m_ObjectHideFlags: 0

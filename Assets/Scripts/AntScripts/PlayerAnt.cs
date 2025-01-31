@@ -28,7 +28,7 @@ public class PlayerAnt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(hpCount == 0) isDead = true; //play dead animation
     }
 
     Vector2Int getPos(){
@@ -45,7 +45,7 @@ public class PlayerAnt : MonoBehaviour
     }
 
     public void gainHP(){
-        if(hpCount<2) hpCount +=1;
+        if(hpCount<maxHP) hpCount +=1;
     }
 
 }

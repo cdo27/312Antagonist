@@ -33,6 +33,9 @@ public class GridManager : MonoBehaviour
     //Ant's positions on grid
     private List<Vector2Int> otherAntPositions;
 
+    //GroundTile for replacing
+    public GroundTile groundTilePrefab;
+
     void Start()
     {
         selectedAnt = -1;
@@ -139,8 +142,6 @@ public class GridManager : MonoBehaviour
 
               
 
-                        //Click on Highlight Tile
-                        if (selectedAnt == 0 && baseTile.isHighlighted){
                             MovePlayerAnt(scoutAnt, baseTile);
                             UnhighlightAllTiles();
                         }
@@ -150,32 +151,19 @@ public class GridManager : MonoBehaviour
                             UnhighlightAllTiles();
                         }
 
-                        if (selectedAnt == 2 && baseTile.isHighlighted)
-                        {
-                            MovePlayerAnt(soldierAnt, baseTile);
-                            UnhighlightAllTiles();
-                        }
-
                         //Click on Ability Tile
-                        if (selectedAnt == 0 && baseTile.isAbilityTile){
+                        if(selectedAnt == 0 && baseTile.isAbilityTile){
                             RevealTrapTiles(scoutAnt.gridPosition);
                             Debug.Log("Revealed Trap Tiles!");
                             UnhighlightAllTiles();
                         }
 
-                        //Ant Throw 
-                        if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == -1)
-                        {
-                            Debug.Log("Start Throw Process");
-                            ThrowSelectTargetCharacter(soldierAnt, baseTile);
-                            
-                        } else if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 0)
-                        {
-                            Debug.Log("throwing character now");
-                            ThrowCharacter(baseTile);
-
+                        // Builder Ant Ability Build
+                        if(selectedAnt == 1 && baseTile.isAbilityTile){
+                            BuildOnTile(baseTile);
+                            UnhighlightAllTiles();
                         }
-
+                        
                     }
                 }
             }
@@ -384,8 +372,50 @@ public class GridManager : MonoBehaviour
         scoutAnt.usedAbility = true;
     }
 
+    //Builder Ability Detect
+    public void OnBuildButtonPressed()
+    {
+        if (selectedAnt == 1) // Builder Ant
+        {
+            Debug.Log("Detect button pressed for Scout Ant!");
+            if (!builderAnt.usedAbility)
+            {
+                UnhighlightAllTiles();
+                ShowBuildTiles(builderAnt.gridPosition);
+            }
+        }
+    }
+
     void ShowBuildTiles(Vector2Int antPosition){
-        
+        // Update list of all other ant positions, for preventing moving onto or using ability there
+        List<Vector2Int> otherAntPositions = new List<Vector2Int>
+        {
+            scoutAnt.gridPosition,
+            queenAnt.gridPosition,
+            builderAnt.gridPosition,
+            antLion.gridPosition,
+            antLionSecond.gridPosition
+        };
+
+        // Loop through the grid to check all tiles within the radius
+        for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
+        {
+            for (int y = antPosition.y - 1; y <= antPosition.y + 1; y++)
+            {
+                Vector2Int currentPos = new Vector2Int(x, y);
+
+                // Check if the tile is within bounds and not occupied by another ant
+                if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY && !otherAntPositions.Contains(currentPos))
+                {
+                    BaseTile tile = gridArray[x, y];
+
+                    if (tile != null)
+                    {
+                        tile.HighlightAbilityTile();
+                    }
+                }
+            }
+        }
     }
 
     //----Soldier Ability Throw----
@@ -537,6 +567,55 @@ public class GridManager : MonoBehaviour
     }
 
 
+    public void BuildOnTile(BaseTile baseTile){
+        // Building ona  water tile (replace with ground tile?)
+        if (baseTile.tileType == BaseTile.TileType.Water) {
+            ((WaterTile)baseTile).BuildBridge();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built a Bridge!");
+        }
+        // Building on a ground tile
+        if (baseTile.tileType == BaseTile.TileType.Ground) {
+            ((GroundTile)baseTile).buildObstacle();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built an Obstacle!");
+        }
+
+        // Building on a trap tile (replace with ground tile)
+        if (baseTile.tileType == BaseTile.TileType.Trap) {
+
+            // grid pos
+            Vector2Int gridPos = new Vector2Int(baseTile.xIndex, baseTile.yIndex);
+
+            // Check if valid
+            if (gridPos.x >= 0 && gridPos.x < gridSizeX && gridPos.y >= 0 && gridPos.y < gridSizeY) {
+                
+                // Replace tile
+                GroundTile newGroundTile = Instantiate(groundTilePrefab, baseTile.transform.position, Quaternion.identity);
+
+                // Set to the same as the original tile
+                newGroundTile.transform.SetParent(baseTile.transform.parent);
+                newGroundTile.name = baseTile.name;
+                newGroundTile.xIndex = baseTile.xIndex;
+                newGroundTile.yIndex = baseTile.yIndex;
+
+                // Update the new tile type and sprite
+                newGroundTile.tileType = BaseTile.TileType.Ground;
+                newGroundTile.HideDeployableTiles();
+
+                // Update the grid array with new 
+                gridArray[gridPos.x, gridPos.y] = newGroundTile;
+
+                // Destroy the old TrapTile
+                Destroy(baseTile.gameObject);
+
+                builderAnt.usedAbility = true;
+                Debug.Log("Buried Trap and Replaced with Ground Tile!");
+            }
+        }
+
+    }
+
     //----Move Functions----------------------------------------------------------------------
 
     //Move Button pressed Highlight Tiles, applied to OnCLick()
@@ -580,6 +659,9 @@ public class GridManager : MonoBehaviour
         playerAnt.transform.position = targetTile.transform.position;
         
         playerAnt.hasMoved = true;
+
+        //target tile is a trap tile, hurt ant
+        if(targetTile is TrapTile) playerAnt.loseHP();
     
         
     }
@@ -631,26 +713,27 @@ public class GridManager : MonoBehaviour
     }
 
     public void moveAntLion()
+{
+    // Get the Queen's current position
+    Vector2Int queenPosition = queenAnt.gridPosition;
+
+    // Get the current AntLion position
+    Vector2Int antLionPosition = antLion.gridPosition;
+
+    // Determine the direction to move by comparing positions
+    int dx = Mathf.Clamp(queenPosition.x - antLionPosition.x, -1, 1);
+    int dy = Mathf.Clamp(queenPosition.y - antLionPosition.y, -1, 1);
+
+    // Generate a new position for the AntLion to move to
+    Vector2Int nextPosition = new Vector2Int(antLionPosition.x + dx, antLionPosition.y + dy);
+
+    // Access the BaseTile at the next position
+    if (nextPosition.x >= 0 && nextPosition.x < gridSizeX && nextPosition.y >= 0 && nextPosition.y < gridSizeY)
     {
-        // Get the Queen's current position
-        Vector2Int queenPosition = queenAnt.gridPosition;
-
-        // Get the current AntLion position
-        Vector2Int antLionPosition = antLion.gridPosition;
-
-        // Calculate the direction toward the Queen's position
-        Vector2Int direction = new Vector2Int(
-            (int)Mathf.Sign(queenPosition.x - antLionPosition.x),
-            (int)Mathf.Sign(queenPosition.y - antLionPosition.y)
-        );
-
-        // Calculate the next position
-        Vector2Int nextPosition = new Vector2Int(antLionPosition.x + direction.x, antLionPosition.y + direction.y);
-
-        // find basetile at target pos
         BaseTile targetTile = gridArray[nextPosition.x, nextPosition.y];
 
-        if (targetTile != null && targetTile.isWalkable) {
+        // Ensure the tile is walkable and not currently occupied by any ant other than the QueenAnt
+        if (targetTile != null && targetTile.isWalkable && !IsTileOccupiedByOtherAnts(nextPosition, queenPosition))
             // check if any ants are on target position
             if ((scoutAnt != null && scoutAnt.gridPosition == nextPosition) ||
                 (builderAnt != null && builderAnt.gridPosition == nextPosition) ||
@@ -661,17 +744,34 @@ public class GridManager : MonoBehaviour
 
             // Move AntLion to the new position
             antLion.transform.position = targetTile.transform.position;
-
-            // Update AntLion's grid position
             antLion.gridPosition = nextPosition;
 
             Debug.Log($"AntLion moved to ({nextPosition.x}, {nextPosition.y})");
 
-            //add logic for reaching queen position, attack
-
-        } else {
-            Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - it's not walkable.");
+            // Check for overlap with the QueenAnt
+            if (nextPosition == queenPosition)
+            {
+                Debug.Log("AntLion has caught the QueenAnt!");
+                // Implement any game logic needed when the AntLion catches the QueenAnt
+            }
+        }
+        else
+        {
+            Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - tile not walkable or occupied.");
         }
     }
+    else
+    {
+        Debug.Log($"AntLion movement out of bounds ({nextPosition.x}, {nextPosition.y}).");
+    }
+}
+
+private bool IsTileOccupiedByOtherAnts(Vector2Int position, Vector2Int queenPosition)
+{
+    return (scoutAnt != null && scoutAnt.gridPosition == position && position != queenPosition) ||
+           (builderAnt != null && builderAnt.gridPosition == position && position != queenPosition) ||
+           (antLionSecond != null && antLionSecond.gridPosition == position && position != queenPosition);
+}
+
 
 }
