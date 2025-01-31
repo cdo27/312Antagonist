@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour
     public GameObject soldierAntUI;
     public TileInformationUI tileInfoUI;
 
+    public GameObject GameOverScreen;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +53,13 @@ public class UIManager : MonoBehaviour
         soldierAntUI.SetActive(false);
     }
 
+    public void HideAllAntUI()
+    {
+        scoutAntUI.SetActive(false);
+        builderAntUI.SetActive(false);
+        soldierAntUI.SetActive(false);
+    }
+
     public void ShowTileInformation(string tileInfo)
     {
         if (tileInfoUI != null)
@@ -64,5 +74,10 @@ public class UIManager : MonoBehaviour
         {
             tileInfoUI.HideTileInformation(); 
         }
+    }
+
+    public void ShowGameOverScreen()
+    {
+        GameOverScreen.SetActive(true);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
 
@@ -11,10 +12,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gameStateText;
     public Button endTurnButton;
     public GridManager gridManager;
+    public UIManager uiManager;
 
     public ScoutAnt scoutAnt;
     public BuilderAnt builderAnt;
     public SoldierAnt soldierAnt;
+    public QueenAnt queenAnt;
 
     void Start()
     {
@@ -40,14 +43,21 @@ public class GameManager : MonoBehaviour
             gameStateText.text = $"Game State: {gameState}";
         }
 
-        //If one ant hasMoved, make other ants hasMoved for one turn moves
+        if (queenAnt.isDead){
+            uiManager.ShowGameOverScreen();
+        } 
+
+        //If one ant hasMoved, make other ants hasMoved for one turn move
     }
 
     void OnEndTurnButtonClicked()
     {
-        gridManager.selectedAnt = -1;
+        //gridManager.selectedAnt = -1; if keeping ant selected after turn switches
         // Handle the button click logic here
         Debug.Log("End Turn Button Clicked!");
+
+        gridManager.UnhighlightAllTiles();
+        //uiManager.HideAllAntUI();
 
         if(gameState == GameState.Player){
             gameState = GameState.QueenAnt;
@@ -97,5 +107,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("Queen has completed her path! You win!");
         gameState = GameState.End;
         gameStateText.text = $"Game State: {gameState}";
+    }
+
+    public void ReturnToMenu(){
+        SceneManager.LoadScene("Menu");
     }
 }

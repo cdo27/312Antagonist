@@ -278,7 +278,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void UnhighlightAllTiles()
+    public void UnhighlightAllTiles()
     {
         for (int x = 0; x < gridSizeX; x++)
         {
@@ -786,6 +786,7 @@ public class GridManager : MonoBehaviour
             if (nextPosition == queenPosition)
             {
                 Debug.Log("AntLion has caught the QueenAnt!");
+                queenAnt.isDead = true;
                 // Implement any game logic needed when the AntLion catches the QueenAnt
             }
         }
