@@ -2293,6 +2293,10 @@ MonoBehaviour:
   fullHealthBar: {fileID: 0}
   oneHealthBar: {fileID: 0}
   zeroHealthBar: {fileID: 0}
+  animator: {fileID: 0}
+  gridManager: {fileID: 0}
+  soldierThrowPhase: 0
+  soldierThrowTarget: 0
 --- !u!4 &433293854 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7687967356638699984, guid: 5565a3c133e00f0459fe39a11987fe15, type: 3}
@@ -3355,6 +3359,7 @@ MonoBehaviour:
   hasMoved: 0
   isMoving: 0
   isDead: 0
+  animator: {fileID: 0}
 --- !u!4 &626469236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5558730284118473521, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
@@ -5302,6 +5307,7 @@ MonoBehaviour:
   endTurnButton: {fileID: 1062338513}
   queenAnt: {fileID: 1537497075}
   playerAnt: {fileID: 1294637896}
+  gridManager: {fileID: 0}
 --- !u!4 &1128587391
 Transform:
   m_ObjectHideFlags: 0
@@ -7669,6 +7675,8 @@ MonoBehaviour:
   fullHealthBar: {fileID: 0}
   oneHealthBar: {fileID: 0}
   zeroHealthBar: {fileID: 0}
+  animator: {fileID: 0}
+  gridManager: {fileID: 0}
 --- !u!212 &1609419368
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8489,6 +8497,7 @@ MonoBehaviour:
   hasMoved: 0
   isMoving: 0
   isDead: 0
+  animator: {fileID: 0}
 --- !u!61 &1677470564
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8496,7 +8505,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677470561}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -8735,6 +8744,7 @@ MonoBehaviour:
   hasMoved: 0
   isMoving: 0
   isDead: 0
+  animator: {fileID: 0}
 --- !u!4 &1702484151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7687967356638699984, guid: 5565a3c133e00f0459fe39a11987fe15, type: 3}
@@ -10315,6 +10325,8 @@ MonoBehaviour:
   fullHealthBar: {fileID: 21300000, guid: f5b2a1bf3cf5b69428b22b610cdb52b4, type: 3}
   oneHealthBar: {fileID: 21300000, guid: 1f4b1be75607f54478e7e9119e13da5c, type: 3}
   zeroHealthBar: {fileID: 21300000, guid: 7e9ae663545b8e240bd5b5344a8a4751, type: 3}
+  animator: {fileID: 0}
+  gridManager: {fileID: 0}
 --- !u!1 &1940651462
 GameObject:
   m_ObjectHideFlags: 0
