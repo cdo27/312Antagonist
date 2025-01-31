@@ -137,6 +137,8 @@ public class GridManager : MonoBehaviour
                             UnhighlightAllTiles();
                         }
 
+              
+
                         //Click on Highlight Tile
                         if (selectedAnt == 0 && baseTile.isHighlighted){
                             MovePlayerAnt(scoutAnt, baseTile);
@@ -431,10 +433,31 @@ public class GridManager : MonoBehaviour
         UnhighlightAllTiles();
         Vector2Int targetPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
 
+        
+
         switch (targetPosition)
         {
             case var _ when targetPosition == scoutAnt.gridPosition:
                 soldierThrowTarget = 0;
+                soldierThrowPhase = 0;
+                showTileToThrowTo();
+                break;
+
+            case var _ when targetPosition == builderAnt.gridPosition:
+                soldierThrowTarget = 1;
+                soldierThrowPhase = 0;
+                showTileToThrowTo();
+                break;
+
+            case var _ when targetPosition == antLion.gridPosition:
+                
+                soldierThrowTarget = 2;
+                soldierThrowPhase = 0;
+                showTileToThrowTo();
+                break;
+
+            case var _ when targetPosition == antLionSecond.gridPosition:
+                soldierThrowTarget = 3;
                 soldierThrowPhase = 0;
                 showTileToThrowTo();
                 break;
@@ -488,6 +511,21 @@ public class GridManager : MonoBehaviour
             case 0:
                 scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
                 scoutAnt.transform.position = targetTile.transform.position;
+                break;
+
+            case 1:
+                builderAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
+                builderAnt.transform.position = targetTile.transform.position;
+                break;
+
+            case 2:
+                antLion.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
+                antLion.transform.position = targetTile.transform.position;
+                break;
+
+            case 3:
+                antLionSecond.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
+                antLionSecond.transform.position = targetTile.transform.position;
                 break;
         }
 
