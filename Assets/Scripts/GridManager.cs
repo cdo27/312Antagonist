@@ -684,10 +684,7 @@ public class GridManager : MonoBehaviour
         playerAnt.hasMoved = true;
 
         //target tile is a trap tile, hurt ant
-        if(targetTile is TrapTile) playerAnt.loseHP();
-=========
-    
->>>>>>>>> Temporary merge branch 2
+        if (targetTile is TrapTile) playerAnt.loseHP();
         
     }
 
@@ -760,8 +757,6 @@ public class GridManager : MonoBehaviour
         // Ensure the tile is walkable and not currently occupied by any ant other than the QueenAnt
         if (targetTile != null && targetTile.isWalkable && !IsTileOccupiedByOtherAnts(nextPosition, queenPosition))
         {
-=========
-        if (targetTile != null && targetTile.isWalkable) {
             // check if any ants are on target position
             if ((scoutAnt != null && scoutAnt.gridPosition == nextPosition) ||
                 (builderAnt != null && builderAnt.gridPosition == nextPosition) ||
