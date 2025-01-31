@@ -790,6 +790,7 @@ public class GridManager : MonoBehaviour
             if (nextPosition == queenPosition)
             {
                 Debug.Log("AntLion has caught the QueenAnt!");
+                queenAnt.isDead = true;
                 // Implement any game logic needed when the AntLion catches the QueenAnt
             }
         }
