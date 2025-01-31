@@ -9,6 +9,8 @@ public class BaseTile : MonoBehaviour
     public bool isHighlighted;
     public bool isAbilityTile;
 
+    public bool hasCharacter;
+
     public int xIndex;
     public int yIndex;
 
@@ -28,7 +30,6 @@ public class BaseTile : MonoBehaviour
     {
        
     }
-
 
     public virtual void Highlight()
     {

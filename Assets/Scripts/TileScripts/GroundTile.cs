@@ -13,6 +13,7 @@ public class GroundTile : BaseTile
     {
         tileType = TileType.Ground;
         isWalkable = true;
+        hasCharacter = false;
         spriteRenderer = GetComponent<SpriteRenderer>(); // Get the main tile sprite
         tileInfoUI = FindObjectOfType<TileInformationUI>();
     }
@@ -33,7 +34,7 @@ public class GroundTile : BaseTile
     //shows tile information in the bottom right box.
     void OnMouseEnter()
     {
-        Debug.Log(tileType);
+        //Debug.Log(tileType);
         if (tileInfoUI != null)
         {
             tileInfoUI.ShowTileInformation(tileType.ToString()); 
@@ -47,7 +48,6 @@ public class GroundTile : BaseTile
             tileInfoUI.HideTileInformation();
         }
     }
-
 
     public override void Highlight()
     {

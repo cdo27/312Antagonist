@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI gameStateText;
     public GameObject scoutAntUI;
     public GameObject builderAntUI;
+    public GameObject soldierAntUI;
     public TileInformationUI tileInfoUI;
 
     // Start is called before the first frame update
@@ -37,6 +38,16 @@ public class UIManager : MonoBehaviour
 
     public void HideBuilderAntUI(){
         builderAntUI.SetActive(false);
+    }
+
+    public void ShowSoldierAntUI()
+    {
+        soldierAntUI.SetActive(true);
+    }
+
+    public void HideSoldierAntUI()
+    {
+        soldierAntUI.SetActive(false);
     }
 
     public void ShowTileInformation(string tileInfo)
