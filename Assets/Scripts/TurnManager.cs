@@ -9,6 +9,8 @@ public class TurnManager : MonoBehaviour
     public QueenAntManager queenAnt; // Reference to the Queen Ant Manager
     public SpriteHandler playerAnt;
 
+    public GridManager gridManager;
+
     void Start()
     {
         // Assign the End Turn button's onClick event
@@ -38,8 +40,10 @@ public class TurnManager : MonoBehaviour
     {
         if (isPlayerTurn)
         {
-            //Debug.Log("Ending Player's Turn...");
+            Debug.Log("Ending Player's Turn...");
             isPlayerTurn = false; // Switch to Queen Ant's turn
+
+            gridManager.ResetPlayer();
 
             // Trigger Queen Ant's movement
             StartCoroutine(HandleQueenAntTurn());

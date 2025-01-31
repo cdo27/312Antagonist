@@ -80,7 +80,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        // if player's turn, detect mosue clicks
+        // if player's turn, detect mouse clicks
         if(gameManager.gameState == GameManager.GameState.Player || gameManager.gameState == GameManager.GameState.Deploy){
 
 
@@ -620,13 +620,11 @@ public class GridManager : MonoBehaviour
         switch (soldierAnt.soldierThrowTarget)
         {
             case 0:
-                scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-                scoutAnt.transform.position = targetTile.transform.position;
+                scoutAnt.GettingThrown(targetTile);
                 break;
 
             case 1:
-                builderAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-                builderAnt.transform.position = targetTile.transform.position;
+                builderAnt.GettingThrown(targetTile);
                 break;
 
             case 2:
@@ -737,6 +735,7 @@ public class GridManager : MonoBehaviour
                 }
                 // Increment the path index to move to the next tile in the next call
                 currentPathIndex++;
+
             }
         }
         else
@@ -789,9 +788,10 @@ public class GridManager : MonoBehaviour
             {
                 Debug.Log("AntLion has caught the QueenAnt!");
                 queenAnt.isDead = true;
-                // Implement any game logic needed when the AntLion catches the QueenAnt
+                    // Implement any game logic needed when the AntLion catches the QueenAnt
+
             }
-        }
+            }
         else
         {
             Debug.Log($"AntLion cannot move to ({nextPosition.x}, {nextPosition.y}) - tile not walkable or occupied.");
@@ -803,7 +803,13 @@ public class GridManager : MonoBehaviour
     }
 }
 
-private bool IsTileOccupiedByOtherAnts(Vector2Int position, Vector2Int queenPosition)
+
+    public void ResetPlayer()
+    {
+        selectedAnt = -1;
+    }
+
+    private bool IsTileOccupiedByOtherAnts(Vector2Int position, Vector2Int queenPosition)
 {
     return (scoutAnt != null && scoutAnt.gridPosition == position && position != queenPosition) ||
            (builderAnt != null && builderAnt.gridPosition == position && position != queenPosition) ||
@@ -812,3 +818,4 @@ private bool IsTileOccupiedByOtherAnts(Vector2Int position, Vector2Int queenPosi
 
 
 }
+

@@ -52,14 +52,19 @@ public class GameManager : MonoBehaviour
 
     void OnEndTurnButtonClicked()
     {
-        //gridManager.selectedAnt = -1; if keeping ant selected after turn switches
+
         // Handle the button click logic here
         Debug.Log("End Turn Button Clicked!");
 
         gridManager.UnhighlightAllTiles();
         //uiManager.HideAllAntUI();
 
-        if(gameState == GameState.Player){
+        gridManager.selectedAnt = -1;
+        uiManager.HideScoutAntUI();
+        uiManager.HideBuilderAntUI();
+        uiManager.HideSoldierAntUI();
+
+        if (gameState == GameState.Player){
             gameState = GameState.QueenAnt;
             turnQueenAnt();
         }
