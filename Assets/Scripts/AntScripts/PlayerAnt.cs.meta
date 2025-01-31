@@ -3,7 +3,13 @@ guid: 1a8552ee7137ef2438160dbf3a047103
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fullHealthSprite: {fileID: 21300000, guid: ddb6311c072b7034bb0942b40168acd7, type: 3}
+  - oneHealthSprite: {fileID: 21300000, guid: ddb6311c072b7034bb0942b40168acd7, type: 3}
+  - zeroHealthSprite: {fileID: 21300000, guid: ddb6311c072b7034bb0942b40168acd7, type: 3}
+  - fullHealthBar: {fileID: 21300000, guid: f5b2a1bf3cf5b69428b22b610cdb52b4, type: 3}
+  - oneHealthBar: {fileID: 21300000, guid: 1f4b1be75607f54478e7e9119e13da5c, type: 3}
+  - zeroHealthBar: {fileID: 21300000, guid: 7e9ae663545b8e240bd5b5344a8a4751, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -53,6 +53,13 @@ public class UIManager : MonoBehaviour
         soldierAntUI.SetActive(false);
     }
 
+    public void HideAllAntUI()
+    {
+        scoutAntUI.SetActive(false);
+        builderAntUI.SetActive(false);
+        soldierAntUI.SetActive(false);
+    }
+
     public void ShowTileInformation(string tileInfo)
     {
         if (tileInfoUI != null)

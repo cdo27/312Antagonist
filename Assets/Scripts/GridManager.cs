@@ -282,7 +282,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void UnhighlightAllTiles()
+    public void UnhighlightAllTiles()
     {
         for (int x = 0; x < gridSizeX; x++)
         {
