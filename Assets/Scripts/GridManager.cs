@@ -478,6 +478,9 @@ public class GridManager : MonoBehaviour
         playerAnt.transform.position = targetTile.transform.position;
         
         playerAnt.hasMoved = true;
+
+        //target tile is a trap tile, hurt ant
+        if(targetTile is TrapTile) playerAnt.loseHP();
         
     }
 
