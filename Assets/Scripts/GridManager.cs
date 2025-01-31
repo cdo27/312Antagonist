@@ -718,11 +718,13 @@ public class GridManager : MonoBehaviour
                     Debug.Log($"Queen cannot move to ({targetPosition.x}, {targetPosition.y}) - an ant is already there!");
                     return; // Stop movement if another ant is present
                 }
+
+                // Update Queen's grid position
+                queenAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
                 // Move Queen to the new position
                 queenAnt.MoveToTile(targetTile);
 
-                // Update Queen's grid position
-                queenAnt.gridPosition = targetPosition;
+
 
                 // Log the movement
                 Debug.Log($"Queen moved to ({targetPosition.x}, {targetPosition.y})");

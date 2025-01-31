@@ -31,8 +31,7 @@ public class NPCAnt : MonoBehaviour
 
     public void MoveToTile(BaseTile targetTile)
     {
-
-        if (isMoving || hasMoved) return;
+        if (isMoving) return;
 
         StartCoroutine(MoveAnimation(targetTile));
     }
@@ -63,14 +62,12 @@ public class NPCAnt : MonoBehaviour
 
         transform.position = targetPosition; // Ensure exact positioning
         gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-        hasMoved = true;
         isMoving = false;
 
         if (animator != null)
         {
             animator.SetBool("isMoving", false);
         }
-
-        
     }
+
 }

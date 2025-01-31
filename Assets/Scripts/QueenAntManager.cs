@@ -65,6 +65,7 @@ public class QueenAntManager : MonoBehaviour
     // Coroutine to smoothly move the Queen Ant to the target position
     private IEnumerator MoveToPosition(Vector3 targetPosition)
     {
+        Debug.Log("testing queen");
         while ((transform.position - targetPosition).magnitude > 0.01f)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
