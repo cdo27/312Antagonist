@@ -107,43 +107,44 @@ public class GridManager : MonoBehaviour
                     {
                         // Print the tile's index from the grid
                         Debug.Log($"Tile clicked at ({baseTile.xIndex}, {baseTile.yIndex}) with type: {baseTile.tileType}");
-                       
+
                         //Check clicked tile for ants, show UI, highlight tiles
-                        // Check if the clicked tile contains the ScoutAnt
-                         if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
-                        {
-                            selectedAnt = 0;
-                            Debug.Log("Scout Ant Selected!");
-                            uiManager.ShowScoutAntUI();
-                            uiManager.HideBuilderAntUI();
-                            uiManager.HideSoldierAntUI();
-                            UnhighlightAllTiles();
+                        // If in the throw phase, prevent selection of other ants
+                        if (soldierThrowPhase == -1)
+                        { 
+                            if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            {
+                                selectedAnt = 0;
+                                Debug.Log("Scout Ant Selected!");
+                                uiManager.ShowScoutAntUI();
+                                uiManager.HideBuilderAntUI();
+                                uiManager.HideSoldierAntUI();
+                                UnhighlightAllTiles();
+                            }
+                            else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            {
+                                selectedAnt = 1;
+                                Debug.Log("Builder Ant Selected!");
+                                uiManager.ShowBuilderAntUI();
+                                uiManager.HideScoutAntUI();
+                                uiManager.HideSoldierAntUI();
+                                UnhighlightAllTiles();
+                            }
+                            else if (soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            {
+                                selectedAnt = 2;
+                                Debug.Log("Soldier Ant Selected!");
+                                uiManager.ShowSoldierAntUI();
+                                uiManager.HideScoutAntUI();
+                                uiManager.HideBuilderAntUI();
+                                UnhighlightAllTiles();
+                            }
                         }
 
-                        else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
-                        {
-                            selectedAnt = 1;
-                            Debug.Log("Builder Ant Selected!");
-                            uiManager.ShowBuilderAntUI();
-                            uiManager.HideScoutAntUI();
-                            uiManager.HideSoldierAntUI();
-                            UnhighlightAllTiles();
-                        }
 
-                        else if (soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
-                        {
-                            selectedAnt = 2;
-                            Debug.Log("Soldier Ant Selected!");
-                            uiManager.ShowSoldierAntUI();
-                            uiManager.HideScoutAntUI();
-                            uiManager.HideBuilderAntUI();
-                            UnhighlightAllTiles();
-                        }
-
-              
 
                         //Click on Highlight Move Tile ---------------------
-                        if(selectedAnt == 0 && baseTile.isHighlighted){
+                        if (selectedAnt == 0 && baseTile.isHighlighted){
                             MovePlayerAnt(scoutAnt, baseTile);
                             UnhighlightAllTiles();
                         }
@@ -175,12 +176,12 @@ public class GridManager : MonoBehaviour
                         
 
                         //Ant Throw 
-                        if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == -1)
+                        if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 0)
                         {
                             Debug.Log("Start Throw Process");
                             ThrowSelectTargetCharacter(soldierAnt, baseTile);
                             
-                        } else if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 0)
+                        } else if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 1)
                         {
                             Debug.Log("throwing character now");
                             ThrowCharacter(baseTile);
@@ -460,6 +461,7 @@ public class GridManager : MonoBehaviour
     //Second, highlight the entire area around soldier ant (all character in hightlighted areas are options for soldier ant to throw
     void ShowThrowOptionTiles()
     {
+        soldierThrowPhase = 0;
         // Loop through the grid to check all tiles within the radius (adjacent and diagonal)
         for (int x = soldierAnt.gridPosition.x - 1; x <= soldierAnt.gridPosition.x + 1; x++)
         {
@@ -492,26 +494,23 @@ public class GridManager : MonoBehaviour
         {
             case var _ when targetPosition == scoutAnt.gridPosition:
                 soldierThrowTarget = 0;
-                soldierThrowPhase = 0;
+                
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == builderAnt.gridPosition:
                 soldierThrowTarget = 1;
-                soldierThrowPhase = 0;
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == antLion.gridPosition:
                 
                 soldierThrowTarget = 2;
-                soldierThrowPhase = 0;
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == antLionSecond.gridPosition:
                 soldierThrowTarget = 3;
-                soldierThrowPhase = 0;
                 showTileToThrowTo();
                 break;
 
@@ -526,6 +525,7 @@ public class GridManager : MonoBehaviour
     //Fourth, with the target selected, choose the tile you want to throw that target to.
     void showTileToThrowTo()
     {
+        soldierThrowPhase = 1;
         // Define the four cardinal directions with one-step and two-step distances
         int[,] targetTiles = {
             {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y + 1}, // Up 1 step
