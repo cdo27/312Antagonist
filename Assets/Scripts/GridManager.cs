@@ -22,10 +22,6 @@ public class GridManager : MonoBehaviour
 
     public int selectedAnt; //No Selection = -1 Scout = 0, Builder = 1, Soldier = 2
 
-    //Soldier Ant Throw Actions
-    private int soldierThrowPhase; //not throwing = -1, selecting target = 0, selecting tile to throw to = 1
-    private int soldierThrowTarget; //no target = -1, scout = 0, builder = 1, antlion(1) = 2, antlion(2) = 3
-
     //QueenAnt path
     private List<Vector2Int> queenPath;
     private int currentPathIndex = 0; 
@@ -42,7 +38,7 @@ public class GridManager : MonoBehaviour
         gridArray = new BaseTile[gridSizeX, gridSizeY];
 
         //set up soldier ant throw phase
-        soldierThrowPhase = -1;
+        soldierAnt.soldierThrowPhase = -1;
 
         // Loop through all child objects under the grid parent
         foreach (Transform child in transform)
@@ -176,12 +172,12 @@ public class GridManager : MonoBehaviour
                         
 
                         //Ant Throw 
-                        if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 0)
+                        if (selectedAnt == 2 && baseTile.isAbilityTile && soldierAnt.soldierThrowPhase == 0)
                         {
                             Debug.Log("Start Throw Process");
                             ThrowSelectTargetCharacter(soldierAnt, baseTile);
                             
-                        } else if (selectedAnt == 2 && baseTile.isAbilityTile && soldierThrowPhase == 1)
+                        } else if (selectedAnt == 2 && baseTile.isAbilityTile && soldierAnt.soldierThrowPhase == 1)
                         {
                             Debug.Log("throwing character now");
                             ThrowCharacter(baseTile);
@@ -199,8 +195,8 @@ public class GridManager : MonoBehaviour
 
                 //reset all variables
                 selectedAnt = -1;
-                soldierThrowPhase = -1;
-                soldierThrowTarget = -1;
+                soldierAnt.soldierThrowPhase = -1;
+                soldierAnt.soldierThrowTarget = -1;
 
                 //hide all ui
                 uiManager.HideScoutAntUI();
@@ -506,7 +502,7 @@ public class GridManager : MonoBehaviour
 
     //----Soldier Ability Throw----
 
-    //first, on throw button press:
+    //On throw button press, show all the tiles that the ant soldier can grab characters from.
     public void OnThrowButtonPressed()
     {
         if (selectedAnt == 2) // soldier ant
@@ -523,7 +519,7 @@ public class GridManager : MonoBehaviour
     //Second, highlight the entire area around soldier ant (all character in hightlighted areas are options for soldier ant to throw
     void ShowThrowOptionTiles()
     {
-        soldierThrowPhase = 0;
+        soldierAnt.soldierThrowPhase = 0;
         // Loop through the grid to check all tiles within the radius (adjacent and diagonal)
         for (int x = soldierAnt.gridPosition.x - 1; x <= soldierAnt.gridPosition.x + 1; x++)
         {
@@ -555,24 +551,24 @@ public class GridManager : MonoBehaviour
         switch (targetPosition)
         {
             case var _ when targetPosition == scoutAnt.gridPosition:
-                soldierThrowTarget = 0;
+                soldierAnt.soldierThrowTarget = 0;
                 
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == builderAnt.gridPosition:
-                soldierThrowTarget = 1;
+                soldierAnt.soldierThrowTarget = 1;
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == antLion.gridPosition:
-                
-                soldierThrowTarget = 2;
+
+                soldierAnt.soldierThrowTarget = 2;
                 showTileToThrowTo();
                 break;
 
             case var _ when targetPosition == antLionSecond.gridPosition:
-                soldierThrowTarget = 3;
+                soldierAnt.soldierThrowTarget = 3;
                 showTileToThrowTo();
                 break;
 
@@ -587,7 +583,7 @@ public class GridManager : MonoBehaviour
     //Fourth, with the target selected, choose the tile you want to throw that target to.
     void showTileToThrowTo()
     {
-        soldierThrowPhase = 1;
+        soldierAnt.soldierThrowPhase = 1;
         // Define the four cardinal directions with one-step and two-step distances
         int[,] targetTiles = {
             {soldierAnt.gridPosition.x, soldierAnt.gridPosition.y + 1}, // Up 1 step
@@ -621,7 +617,7 @@ public class GridManager : MonoBehaviour
     //Fifth, actually throw the target
     void ThrowCharacter(BaseTile targetTile)
     {
-        switch (soldierThrowTarget)
+        switch (soldierAnt.soldierThrowTarget)
         {
             case 0:
                 scoutAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
@@ -645,8 +641,8 @@ public class GridManager : MonoBehaviour
         }
 
         //reset variables
-        soldierThrowPhase = -1;
-        soldierThrowTarget = -1;
+        soldierAnt.soldierThrowPhase = -1;
+        soldierAnt.soldierThrowTarget = -1;
 
         soldierAnt.usedAbility = true;
         UnhighlightAllTiles();
@@ -694,8 +690,8 @@ public class GridManager : MonoBehaviour
         UnhighlightAllTiles();
         // Move the ant to the target tile
         playerAnt.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-        playerAnt.transform.position = targetTile.transform.position;
-        
+        playerAnt.MoveToTile(targetTile);
+
         playerAnt.hasMoved = true;
 
         //target tile is a trap tile, hurt ant
@@ -723,7 +719,7 @@ public class GridManager : MonoBehaviour
                     return; // Stop movement if another ant is present
                 }
                 // Move Queen to the new position
-                queenAnt.transform.position = targetTile.transform.position;
+                queenAnt.MoveToTile(targetTile);
 
                 // Update Queen's grid position
                 queenAnt.gridPosition = targetPosition;
