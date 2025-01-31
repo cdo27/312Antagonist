@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerAnt : MonoBehaviour
 {
-    public enum AntType { Scout, Builder, Warrior }
+    public enum AntType { Scout, Builder, Soldier }
     public AntType antType;
     public Vector2Int gridPosition;
     public int hpCount;

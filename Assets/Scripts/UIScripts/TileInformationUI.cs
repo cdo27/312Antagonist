@@ -26,7 +26,7 @@ public class TileInformationUI : MonoBehaviour
 
     public void ShowTileInformation(string tileType)
     {
-        Debug.Log("Tile Information Box: showing information!");
+        //Debug.Log("Tile Information Box: showing information!");
 
         //for text
         tileInformationText.text = tileType;

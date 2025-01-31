@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     public ScoutAnt scoutAnt;
     public BuilderAnt builderAnt;
+    public SoldierAnt soldierAnt;
 
     void Start()
     {
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
         //reset all player ants move and ability
         scoutAnt.resetAnt();
         builderAnt.resetAnt();
+        soldierAnt.resetAnt();
 
         gridManager.moveQueen();
 
