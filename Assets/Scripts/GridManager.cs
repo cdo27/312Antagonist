@@ -110,7 +110,7 @@ public class GridManager : MonoBehaviour
                        
                         //Check clicked tile for ants, show UI, highlight tiles
                         // Check if the clicked tile contains the ScoutAnt
-                         if (selectedAnt == -1 && scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                         if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                         {
                             selectedAnt = 0;
                             Debug.Log("Scout Ant Selected!");
@@ -120,7 +120,7 @@ public class GridManager : MonoBehaviour
                             UnhighlightAllTiles();
                         }
 
-                        else if (selectedAnt == -1 &&  builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                         {
                             selectedAnt = 1;
                             Debug.Log("Builder Ant Selected!");
@@ -130,7 +130,7 @@ public class GridManager : MonoBehaviour
                             UnhighlightAllTiles();
                         }
 
-                        else if (selectedAnt == -1 && soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        else if (soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                         {
                             selectedAnt = 2;
                             Debug.Log("Soldier Ant Selected!");
