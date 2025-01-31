@@ -441,55 +441,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void BuildOnTile(BaseTile baseTile){
-        // Building ona  water tile (replace with ground tile?)
-        if (baseTile.tileType == BaseTile.TileType.Water) {
-            ((WaterTile)baseTile).BuildBridge();
-            builderAnt.usedAbility = true;
-            Debug.Log("Built a Bridge!");
-        }
-        // Building on a ground tile
-        if (baseTile.tileType == BaseTile.TileType.Ground) {
-            ((GroundTile)baseTile).buildObstacle();
-            builderAnt.usedAbility = true;
-            Debug.Log("Built an Obstacle!");
-        }
-
-        // Building on a trap tile (replace with ground tile)
-        if (baseTile.tileType == BaseTile.TileType.Trap) {
-
-            // grid pos
-            Vector2Int gridPos = new Vector2Int(baseTile.xIndex, baseTile.yIndex);
-
-            // Check if valid
-            if (gridPos.x >= 0 && gridPos.x < gridSizeX && gridPos.y >= 0 && gridPos.y < gridSizeY) {
-                
-                // Replace tile
-                GroundTile newGroundTile = Instantiate(groundTilePrefab, baseTile.transform.position, Quaternion.identity);
-
-                // Set to the same as the original tile
-                newGroundTile.transform.SetParent(baseTile.transform.parent);
-                newGroundTile.name = baseTile.name;
-                newGroundTile.xIndex = baseTile.xIndex;
-                newGroundTile.yIndex = baseTile.yIndex;
-
-                // Update the new tile type and sprite
-                newGroundTile.tileType = BaseTile.TileType.Ground;
-                newGroundTile.HideDeployableTiles();
-
-                // Update the grid array with new 
-                gridArray[gridPos.x, gridPos.y] = newGroundTile;
-
-                // Destroy the old TrapTile
-                Destroy(baseTile.gameObject);
-
-                builderAnt.usedAbility = true;
-                Debug.Log("Buried Trap and Replaced with Ground Tile!");
-            }
-        }
-
-    }
-
     //----Soldier Ability Throw----
 
     //first, on throw button press:
@@ -639,6 +590,55 @@ public class GridManager : MonoBehaviour
     }
 
 
+    public void BuildOnTile(BaseTile baseTile){
+        // Building ona  water tile (replace with ground tile?)
+        if (baseTile.tileType == BaseTile.TileType.Water) {
+            ((WaterTile)baseTile).BuildBridge();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built a Bridge!");
+        }
+        // Building on a ground tile
+        if (baseTile.tileType == BaseTile.TileType.Ground) {
+            ((GroundTile)baseTile).buildObstacle();
+            builderAnt.usedAbility = true;
+            Debug.Log("Built an Obstacle!");
+        }
+
+        // Building on a trap tile (replace with ground tile)
+        if (baseTile.tileType == BaseTile.TileType.Trap) {
+
+            // grid pos
+            Vector2Int gridPos = new Vector2Int(baseTile.xIndex, baseTile.yIndex);
+
+            // Check if valid
+            if (gridPos.x >= 0 && gridPos.x < gridSizeX && gridPos.y >= 0 && gridPos.y < gridSizeY) {
+                
+                // Replace tile
+                GroundTile newGroundTile = Instantiate(groundTilePrefab, baseTile.transform.position, Quaternion.identity);
+
+                // Set to the same as the original tile
+                newGroundTile.transform.SetParent(baseTile.transform.parent);
+                newGroundTile.name = baseTile.name;
+                newGroundTile.xIndex = baseTile.xIndex;
+                newGroundTile.yIndex = baseTile.yIndex;
+
+                // Update the new tile type and sprite
+                newGroundTile.tileType = BaseTile.TileType.Ground;
+                newGroundTile.HideDeployableTiles();
+
+                // Update the grid array with new 
+                gridArray[gridPos.x, gridPos.y] = newGroundTile;
+
+                // Destroy the old TrapTile
+                Destroy(baseTile.gameObject);
+
+                builderAnt.usedAbility = true;
+                Debug.Log("Buried Trap and Replaced with Ground Tile!");
+            }
+        }
+
+    }
+
     //----Move Functions----------------------------------------------------------------------
 
     //Move Button pressed Highlight Tiles, applied to OnCLick()
@@ -685,6 +685,9 @@ public class GridManager : MonoBehaviour
 
         //target tile is a trap tile, hurt ant
         if(targetTile is TrapTile) playerAnt.loseHP();
+=========
+    
+>>>>>>>>> Temporary merge branch 2
         
     }
 
@@ -757,6 +760,9 @@ public class GridManager : MonoBehaviour
         // Ensure the tile is walkable and not currently occupied by any ant other than the QueenAnt
         if (targetTile != null && targetTile.isWalkable && !IsTileOccupiedByOtherAnts(nextPosition, queenPosition))
         {
+=========
+        if (targetTile != null && targetTile.isWalkable) {
+            // check if any ants are on target position
             if ((scoutAnt != null && scoutAnt.gridPosition == nextPosition) ||
                 (builderAnt != null && builderAnt.gridPosition == nextPosition) ||
                 (soldierAnt != null && soldierAnt.gridPosition == nextPosition)) {
