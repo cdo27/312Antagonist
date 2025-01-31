@@ -37,7 +37,7 @@ public class WaterTile : BaseTile
     //shows tile information in the bottom right box.
     void OnMouseEnter()
     {
-        Debug.Log(tileType);
+        //Debug.Log(tileType);
         if (tileInfoUI != null)
         {
             tileInfoUI.ShowTileInformation(tileType.ToString());

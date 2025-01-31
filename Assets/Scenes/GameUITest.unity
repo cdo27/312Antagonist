@@ -3815,7 +3815,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2035214946}
         m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
-        m_MethodName: OnDetectButtonPressed
+        m_MethodName: OnThrowButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
