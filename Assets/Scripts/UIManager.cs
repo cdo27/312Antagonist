@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
     public GameObject scoutAntUI;
     public GameObject builderAntUI;
     public GameObject soldierAntUI;
+
+    public GameObject queenAntUI;
+    public GameObject antLionUI;
+
     public TileInformationUI tileInfoUI;
 
     public GameObject GameOverScreen;
@@ -26,6 +30,23 @@ public class UIManager : MonoBehaviour
     {
         
     }
+
+    public void ShowQueenAntUI(){
+        queenAntUI.SetActive(true);
+    }
+
+    public void HideQueenAntUI(){
+        queenAntUI.SetActive(false);
+    }
+
+    public void ShowAntLionUI(){
+        antLionUI.SetActive(true);
+    }
+
+    public void HideAntLionUI(){
+        antLionUI.SetActive(false);
+    }
+    
 
     public void ShowScoutAntUI(){
         scoutAntUI.SetActive(true);

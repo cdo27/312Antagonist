@@ -115,6 +115,8 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowScoutAntUI();
                                 uiManager.HideBuilderAntUI();
                                 uiManager.HideSoldierAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                             else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
@@ -124,6 +126,8 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowBuilderAntUI();
                                 uiManager.HideScoutAntUI();
                                 uiManager.HideSoldierAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                             else if (soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
@@ -133,11 +137,35 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowSoldierAntUI();
                                 uiManager.HideScoutAntUI();
                                 uiManager.HideBuilderAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                         }
 
+                        if (queenAnt != null && queenAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            selectedAnt = -1;
+                            Debug.Log("Queen Ant clicked!");
+                            uiManager.ShowQueenAntUI();
+                            uiManager.HideBuilderAntUI();
+                            uiManager.HideScoutAntUI();
+                            uiManager.HideSoldierAntUI();
+                            uiManager.HideAntLionUI();
+                            UnhighlightAllTiles();
+                        }
 
+                        if (antLion != null && antLion.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            selectedAnt = -1;
+                            Debug.Log("Queen Ant clicked!");
+                            uiManager.ShowAntLionUI();
+                            uiManager.HideBuilderAntUI();
+                            uiManager.HideScoutAntUI();
+                            uiManager.HideSoldierAntUI();
+                            uiManager.HideQueenAntUI();
+                            UnhighlightAllTiles();
+                        }
 
                         //Click on Highlight Move Tile ---------------------
                         if (selectedAnt == 0 && baseTile.isHighlighted){
