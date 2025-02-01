@@ -141,31 +141,31 @@ public class GridManager : MonoBehaviour
                                 uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
-                        }
+                            else if (queenAnt != null && queenAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            {
+                                selectedAnt = -1;
+                                Debug.Log("Queen Ant clicked!");
+                                uiManager.ShowQueenAntUI();
+                                uiManager.HideBuilderAntUI();
+                                uiManager.HideScoutAntUI();
+                                uiManager.HideSoldierAntUI();
+                                uiManager.HideAntLionUI();
+                                UnhighlightAllTiles();
+                            }
 
-                        if (queenAnt != null && queenAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
-                        {
-                            selectedAnt = -1;
-                            Debug.Log("Queen Ant clicked!");
-                            uiManager.ShowQueenAntUI();
-                            uiManager.HideBuilderAntUI();
-                            uiManager.HideScoutAntUI();
-                            uiManager.HideSoldierAntUI();
-                            uiManager.HideAntLionUI();
-                            UnhighlightAllTiles();
+                            else if (antLion != null && antLion.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            {
+                                selectedAnt = -1;
+                                Debug.Log("Ant Lion clicked!");
+                                uiManager.ShowAntLionUI();
+                                uiManager.HideBuilderAntUI();
+                                uiManager.HideScoutAntUI();
+                                uiManager.HideSoldierAntUI();
+                                uiManager.HideQueenAntUI();
+                                UnhighlightAllTiles();
+                            }
                         }
-
-                        if (antLion != null && antLion.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
-                        {
-                            selectedAnt = -1;
-                            Debug.Log("Queen Ant clicked!");
-                            uiManager.ShowAntLionUI();
-                            uiManager.HideBuilderAntUI();
-                            uiManager.HideScoutAntUI();
-                            uiManager.HideSoldierAntUI();
-                            uiManager.HideQueenAntUI();
-                            UnhighlightAllTiles();
-                        }
+           
 
                         //Click on Highlight Move Tile ---------------------
                         if (selectedAnt == 0 && baseTile.isHighlighted){
@@ -657,13 +657,11 @@ public class GridManager : MonoBehaviour
                 break;
 
             case 2:
-                antLion.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-                antLion.transform.position = targetTile.transform.position;
+                antLion.GettingThrown(targetTile);
                 break;
 
             case 3:
-                antLionSecond.gridPosition = new Vector2Int(targetTile.xIndex, targetTile.yIndex);
-                antLionSecond.transform.position = targetTile.transform.position;
+                antLionSecond.GettingThrown(targetTile);
                 break;
         }
 
