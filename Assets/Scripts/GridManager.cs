@@ -722,6 +722,7 @@ public class GridManager : MonoBehaviour
         //target tile is a trap tile, hurt ant
         if (targetTile is TrapTile){
             playerAnt.loseHP();
+            playerAnt.checkHealth();
         }
         
     }

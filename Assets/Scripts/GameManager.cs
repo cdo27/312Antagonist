@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     public SoldierAnt soldierAnt;
     public QueenAnt queenAnt;
 
+    public GameObject antLionBanner;
+    public GameObject playerBanner;
+
     void Start()
     {
         gameState = GameState.Player;
@@ -51,11 +54,43 @@ public class GameManager : MonoBehaviour
         //If one ant hasMoved, make other ants hasMoved for one turn move
     }
 
+    public void ShowAntLionTurnBanner()
+    {
+        if (gameState == GameState.Enemy)
+        {
+            StartCoroutine(ShowTurnBannerWithDelay(0));
+        }
+    }
+
+    public void ShowPlayerTurnBanner()
+    {
+        if (gameState == GameState.Player)
+        {
+            StartCoroutine(ShowTurnBannerWithDelay(1));
+        }
+    }
+
+    private IEnumerator ShowTurnBannerWithDelay(int turn)
+    {
+        if(turn == 0)
+        {
+            antLionBanner.SetActive(true);
+        }else if(turn == 1)
+        {
+            playerBanner.SetActive(true);
+        }
+
+        // banner disappears after a while
+        yield return new WaitForSeconds(0.8f);
+        antLionBanner.SetActive(false);
+        playerBanner.SetActive(false);
+    }
+
     void OnEndTurnButtonClicked()
     {
 
         // Handle the button click logic here
-        Debug.Log("End Turn Button Clicked!");
+        Debug.Log("PLAYER TURN END");
 
         gridManager.UnhighlightAllTiles();
         //uiManager.HideAllAntUI();
@@ -67,7 +102,7 @@ public class GameManager : MonoBehaviour
 
         if (gameState == GameState.Player){
             gameState = GameState.QueenAnt;
-            turnQueenAnt();
+            StartCoroutine(turnQueenAnt());
         }
 
         // Update the game state text
@@ -75,13 +110,16 @@ public class GameManager : MonoBehaviour
         {
             gameStateText.text = $"Game State: {gameState}";
         }
-        
+
+
+
     }
 
 
-    //QueenAnt's turn
-    void turnQueenAnt(){
-        //reset all player ants move and ability
+    // QueenAnt's turn
+    private IEnumerator turnQueenAnt()
+    {
+        // Reset all player ants' moves and abilities
         scoutAnt.resetAnt();
         builderAnt.resetAnt();
         soldierAnt.resetAnt();
@@ -91,21 +129,28 @@ public class GameManager : MonoBehaviour
         if (gameState != GameState.End)
         {
             gameState = GameState.Enemy;
-            turnAntLion();
+            yield return new WaitForSeconds(1f);
+
+            // After the delay, move the Ant Lion
+            StartCoroutine(turnAntLion());
         }
-        //move queenant one step towards nest.
+
+        Debug.Log("QUEEN TURN END");
     }
 
     //AntLion's turn
-    void turnAntLion(){
+    private IEnumerator turnAntLion(){
+        ShowAntLionTurnBanner();
+        yield return new WaitForSeconds(1f);
         gridManager.moveAntLion(); //move antlion towards queen
 
-        Debug.Log($"Moved antlion");
         if (gameState != GameState.End)
         {
-             Debug.Log($"Back to player turn");
             gameState = GameState.Player;
+            ShowPlayerTurnBanner();
         }
+
+        Debug.Log("ANTLION TURN END");
     }
 
     public void WinGame(){
