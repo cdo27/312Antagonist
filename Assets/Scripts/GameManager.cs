@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     public Button endTurnButton;
     public GridManager gridManager;
     public UIManager uiManager;
+    public AudioSource audioSource;
+
+    public AudioClip battleMusic;
 
     public ScoutAnt scoutAnt;
     public BuilderAnt builderAnt;
@@ -21,10 +24,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject antLionBanner;
     public GameObject playerBanner;
+    
 
     void Start()
     {
         gameState = GameState.Player;
+        audioSource.clip = battleMusic;
+        audioSource.Play();
 
         if (gameStateText != null)
         {
