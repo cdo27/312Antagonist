@@ -46,12 +46,27 @@ public class PlayerAnt : MonoBehaviour
 
     void Update()
     {
-        if (hpCount == 0) 
-        {
-            isDead = true; // If HP is zero, mark as dead
-        }
-
         UpdateHealthBarPosition();
+    }
+
+    public void checkHealth()
+    {
+        if (hpCount <= 0)
+        {
+            isDead = true;
+            animator.SetBool("isDead", true);
+            Debug.Log("player ant dead!");
+            StartCoroutine(stayDead());
+        }
+    }
+
+    private IEnumerator stayDead()
+    {
+        yield return new WaitForSeconds(1.5f); 
+        animator.SetBool("isDead", false);
+
+        yield return new WaitForSeconds(5f);
+        Destroy(gameObject);
     }
 
     // Get current position

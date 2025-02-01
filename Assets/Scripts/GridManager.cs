@@ -108,7 +108,7 @@ public class GridManager : MonoBehaviour
                         //make sure only 1 ant get selected per round
                         if (selectedAnt == -1)
                         { 
-                            if (scoutAnt != null && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            if (scoutAnt != null && scoutAnt.hpCount >= 1 && scoutAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                             {
                                 selectedAnt = 0;
                                 Debug.Log("Scout Ant Selected!");
@@ -117,7 +117,7 @@ public class GridManager : MonoBehaviour
                                 uiManager.HideSoldierAntUI();
                                 UnhighlightAllTiles();
                             }
-                            else if (builderAnt != null && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            else if (builderAnt != null && builderAnt.hpCount >= 1 && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                             {
                                 selectedAnt = 1;
                                 Debug.Log("Builder Ant Selected!");
@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
                                 uiManager.HideSoldierAntUI();
                                 UnhighlightAllTiles();
                             }
-                            else if (soldierAnt != null && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                            else if (soldierAnt != null &&  soldierAnt.hpCount >= 1 && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
                             {
                                 selectedAnt = 2;
                                 Debug.Log("Soldier Ant Selected!");
@@ -884,11 +884,8 @@ private void AttackAnt(AntLion antLion, NPCAnt targetAnt)
     Debug.Log($"{antLion.name} attacks {targetAnt.name}!");
     targetAnt.hpCount -= 1; // Reduce HP by 1
 
-    if (targetAnt.hpCount <= 0)
-    {
-        targetAnt.isDead = true;
-        Debug.Log($"{targetAnt.name} has been defeated!");
-    }
+    //targetAnt.checkHealth();
+
     // If the attacked ant is QueenAnt, notify GameManager
     if (targetAnt == queenAnt)
         {
@@ -903,15 +900,10 @@ private void AttackAnt(AntLion antLion, PlayerAnt targetAnt)
     Debug.Log($"{antLion.name} attacks {targetAnt.name}!");
     targetAnt.loseHP(); // Reduce HP by 1
 
-    if (targetAnt.hpCount <= 0)
-    {
-        targetAnt.isDead = true;
-        Debug.Log($"{targetAnt.name} has been defeated!");
-
-        // Remove the ant from play
-        RemovePlayerAnt(targetAnt);
-    }
+        targetAnt.checkHealth();
 }
+
+    /**
 private void RemovePlayerAnt(PlayerAnt targetAnt)
 {
     if (targetAnt == scoutAnt) scoutAnt = null;
@@ -921,7 +913,7 @@ private void RemovePlayerAnt(PlayerAnt targetAnt)
     Destroy(targetAnt.gameObject); // Remove from scene
 }
 
-
+*/
 
 private bool isMoveViable(Vector2Int position, Vector2Int queenPosition)
 {

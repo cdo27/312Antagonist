@@ -7705,7 +7705,7 @@ MonoBehaviour:
   fullHealthBar: {fileID: 0}
   oneHealthBar: {fileID: 0}
   zeroHealthBar: {fileID: 0}
-  animator: {fileID: 0}
+  animator: {fileID: 1609419369}
   gridManager: {fileID: 0}
 --- !u!212 &1609419368
 SpriteRenderer:
