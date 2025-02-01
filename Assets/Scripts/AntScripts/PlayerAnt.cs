@@ -16,11 +16,12 @@ public class PlayerAnt : MonoBehaviour
     public bool usedAbility;
     public bool isDead;
     public bool isHighlighted;
+    public bool ishurtbyTrap;
 
     private SpriteRenderer spriteRenderer;
 
     // Health bar UI sprites
-    public Image healthBarImage;
+    public SpriteRenderer healthBarImage;
     public Sprite fullHealthBar;
     public Sprite oneHealthBar;
     public Sprite zeroHealthBar;
@@ -36,6 +37,7 @@ public class PlayerAnt : MonoBehaviour
         hasMoved = false;
         usedAbility = false;
         isDead = false;
+        ishurtbyTrap = false;
         maxHP = 2;
         hpCount = 2;
 
@@ -80,6 +82,7 @@ public class PlayerAnt : MonoBehaviour
     {
         hasMoved = false;
         usedAbility = false;
+        ishurtbyTrap = false;
     }
 
     public void loseHP()
@@ -165,9 +168,6 @@ public class PlayerAnt : MonoBehaviour
         {
             animator.SetBool("isMoving", false);
         }
-
-        // Check if the tile is a trap
-        if (targetTile is TrapTile) loseHP();
     }
 
     //function for getting thrown

@@ -115,6 +115,8 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowScoutAntUI();
                                 uiManager.HideBuilderAntUI();
                                 uiManager.HideSoldierAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                             else if (builderAnt != null && builderAnt.hpCount >= 1 && builderAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
@@ -124,6 +126,8 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowBuilderAntUI();
                                 uiManager.HideScoutAntUI();
                                 uiManager.HideSoldierAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                             else if (soldierAnt != null &&  soldierAnt.hpCount >= 1 && soldierAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
@@ -133,11 +137,35 @@ public class GridManager : MonoBehaviour
                                 uiManager.ShowSoldierAntUI();
                                 uiManager.HideScoutAntUI();
                                 uiManager.HideBuilderAntUI();
+                                uiManager.HideAntLionUI();
+                                uiManager.HideQueenAntUI();
                                 UnhighlightAllTiles();
                             }
                         }
 
+                        if (queenAnt != null && queenAnt.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            selectedAnt = -1;
+                            Debug.Log("Queen Ant clicked!");
+                            uiManager.ShowQueenAntUI();
+                            uiManager.HideBuilderAntUI();
+                            uiManager.HideScoutAntUI();
+                            uiManager.HideSoldierAntUI();
+                            uiManager.HideAntLionUI();
+                            UnhighlightAllTiles();
+                        }
 
+                        if (antLion != null && antLion.gridPosition == new Vector2Int(baseTile.xIndex, baseTile.yIndex))
+                        {
+                            selectedAnt = -1;
+                            Debug.Log("Queen Ant clicked!");
+                            uiManager.ShowAntLionUI();
+                            uiManager.HideBuilderAntUI();
+                            uiManager.HideScoutAntUI();
+                            uiManager.HideSoldierAntUI();
+                            uiManager.HideQueenAntUI();
+                            UnhighlightAllTiles();
+                        }
 
                         //Click on Highlight Move Tile ---------------------
                         if (selectedAnt == 0 && baseTile.isHighlighted){
@@ -247,15 +275,16 @@ public class GridManager : MonoBehaviour
     void HighlightSurroundingTiles(Vector2Int antPosition)
     {
         // Update list of all other ant positions, for preventing moving onto or using ability there
-        List<Vector2Int> otherAntPositions = new List<Vector2Int>
-        {
-            scoutAnt.gridPosition,
-            queenAnt.gridPosition,
-            builderAnt.gridPosition,
-            soldierAnt.gridPosition,
-            antLion.gridPosition,
-            antLionSecond.gridPosition
-        };
+        List<Vector2Int> otherAntPositions = new List<Vector2Int>();
+
+        if (scoutAnt != null) otherAntPositions.Add(scoutAnt.gridPosition);
+        if (queenAnt != null) otherAntPositions.Add(queenAnt.gridPosition);
+        if (builderAnt != null) otherAntPositions.Add(builderAnt.gridPosition);
+        if (soldierAnt != null) otherAntPositions.Add(soldierAnt.gridPosition);
+        if (antLion != null) otherAntPositions.Add(antLion.gridPosition);
+        if (antLionSecond != null) otherAntPositions.Add(antLionSecond.gridPosition);
+
+
 
         // Loop through the grid to check all tiles within the radius
         for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
@@ -693,7 +722,9 @@ public class GridManager : MonoBehaviour
         playerAnt.hasMoved = true;
 
         //target tile is a trap tile, hurt ant
-        if (targetTile is TrapTile) playerAnt.loseHP();
+        if (targetTile is TrapTile){
+            playerAnt.loseHP();
+        }
         
     }
 
