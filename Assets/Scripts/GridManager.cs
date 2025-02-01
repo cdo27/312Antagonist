@@ -837,7 +837,7 @@ private void moveAntLionIndividual(AntLion antLion)
         BaseTile targetTile = gridArray[targetPosition.x, targetPosition.y];
         if (targetTile != null && targetTile.isWalkable)
         {
-            antLion.transform.position = targetTile.transform.position;
+            antLion.MoveToTile(targetTile);
             antLion.gridPosition = targetPosition;
             Debug.Log($"AntLion moved to ({targetPosition.x}, {targetPosition.y})");
         }

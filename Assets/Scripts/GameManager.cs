@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ShowTurnBannerWithDelay(int turn)
     {
-        if(turn == 0)
+        if (turn == 0)
         {
             antLionBanner.SetActive(true);
         }else if(turn == 1)
@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
         ShowAntLionTurnBanner();
         yield return new WaitForSeconds(1f);
         gridManager.moveAntLion(); //move antlion towards queen
+        yield return new WaitForSeconds(1f);
 
         if (gameState != GameState.End)
         {
