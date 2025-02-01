@@ -247,15 +247,16 @@ public class GridManager : MonoBehaviour
     void HighlightSurroundingTiles(Vector2Int antPosition)
     {
         // Update list of all other ant positions, for preventing moving onto or using ability there
-        List<Vector2Int> otherAntPositions = new List<Vector2Int>
-        {
-            scoutAnt.gridPosition,
-            queenAnt.gridPosition,
-            builderAnt.gridPosition,
-            soldierAnt.gridPosition,
-            antLion.gridPosition,
-            antLionSecond.gridPosition
-        };
+        List<Vector2Int> otherAntPositions = new List<Vector2Int>();
+
+        if (scoutAnt != null) otherAntPositions.Add(scoutAnt.gridPosition);
+        if (queenAnt != null) otherAntPositions.Add(queenAnt.gridPosition);
+        if (builderAnt != null) otherAntPositions.Add(builderAnt.gridPosition);
+        if (soldierAnt != null) otherAntPositions.Add(soldierAnt.gridPosition);
+        if (antLion != null) otherAntPositions.Add(antLion.gridPosition);
+        if (antLionSecond != null) otherAntPositions.Add(antLionSecond.gridPosition);
+
+
 
         // Loop through the grid to check all tiles within the radius
         for (int x = antPosition.x - 1; x <= antPosition.x + 1; x++)
@@ -693,7 +694,9 @@ public class GridManager : MonoBehaviour
         playerAnt.hasMoved = true;
 
         //target tile is a trap tile, hurt ant
-        if (targetTile is TrapTile) playerAnt.loseHP();
+        if (targetTile is TrapTile){
+            playerAnt.loseHP();
+        }
         
     }
 
