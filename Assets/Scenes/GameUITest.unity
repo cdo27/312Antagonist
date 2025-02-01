@@ -692,7 +692,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2162531677393249304, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: isRevealed
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4196631317066925027, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: m_Name
@@ -9695,7 +9695,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2162531677393249304, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: isRevealed
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2162531677393249304, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: isDeployable
@@ -10149,7 +10149,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2162531677393249304, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: isRevealed
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4196631317066925027, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: m_Name
@@ -11706,7 +11706,7 @@ MonoBehaviour:
   gameManager: {fileID: 808538156}
   uiManager: {fileID: 1954570221}
   selectedAnt: 0
-  groundTilePrefab: {fileID: 0}
+  groundTilePrefab: {fileID: 4574570385499563161, guid: 5565a3c133e00f0459fe39a11987fe15, type: 3}
 --- !u!1 &2037312799
 GameObject:
   m_ObjectHideFlags: 0
@@ -12933,7 +12933,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2162531677393249304, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: isRevealed
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4196631317066925027, guid: 9cb4953b14cd2cc42be95ec5d9fab1bc, type: 3}
       propertyPath: m_Name
